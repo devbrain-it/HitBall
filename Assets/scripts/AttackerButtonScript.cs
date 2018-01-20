@@ -34,7 +34,6 @@ namespace Assets.scripts
         private double           lastTime;
         private HashSet<PowerUp> powerUpEffect;
         private GameObject       ballsSpawnParent;
-        private bool inSpawn;
 
         void Start()
         {
@@ -55,7 +54,6 @@ namespace Assets.scripts
 
             if (spawnBall && ballScript == null && BallPrefab != null)
             {
-                inSpawn = true;
                 var bo = SpawnHelper.SpawnPrefab(BallPrefab, SpawnArea.transform.position, SpawnArea.bounds.size, Quaternion.identity);
                 if (bo != null)
                 {
@@ -69,15 +67,10 @@ namespace Assets.scripts
 
                     spawnBall = false;
                 }
-
-                inSpawn = false;
             }
         }
 
-        private bool IsPowerUpMaximum
-        {
-            get { return powerUpEffect.Contains(PowerUp.MAXIMUM); }
-        }
+        private bool IsPowerUpMaximum => powerUpEffect.Contains(PowerUp.MAXIMUM);
 
         public void OnClick()
         {

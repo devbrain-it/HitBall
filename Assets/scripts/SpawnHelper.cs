@@ -27,7 +27,7 @@ namespace Assets.scripts
 
         public static void SetParentInHierarchy(GameObject child, GameObject parent)
         {
-            child.transform.parent = parent.transform;
+            child.transform.SetParent(parent.transform);
         }
 
         public static void Restart(this ParticleSystem particles)

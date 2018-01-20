@@ -20,17 +20,24 @@ namespace Assets.scripts
 
         void Start()
         {
-            animations             =  new AnimationGroup(this, 2f, false);
-            animations.TimeUpEvent += onAnimationsEnd;
-            animations.Set(new AnimationClip(StarAnimation,        StarAnimationName),
-                           new AnimationClip(LevelUpTextAnimation, LevelUpAnimationName),
-                           new AnimationClip(AlphaAnimation,       AlphaAnimationName),
-                           new ParticleAnimationClip(Particles));
+            initOnce();
+        }
+
+        private void initOnce()
+        {
+            if (animations == null)
+            {
+                animations             =  new AnimationGroup(this, 2f, false);
+                animations.TimeUpEvent += onAnimationsEnd;
+                animations.Set(new AnimationClip(StarAnimation,        StarAnimationName),
+                               new AnimationClip(LevelUpTextAnimation, LevelUpAnimationName),
+                               new AnimationClip(AlphaAnimation,       AlphaAnimationName),
+                               new ParticleAnimationClip(Particles));
+            }
         }
 
         private void onAnimationsEnd()
         {
-            Self.SetActive(false);
             doneCallback?.Invoke();
         }
 
@@ -41,7 +48,8 @@ namespace Assets.scripts
 
         public void Play(Action callback)
         {
-            Self.SetActive(true);
+            initOnce();
+
             doneCallback = callback;
             animations.Play();
         }

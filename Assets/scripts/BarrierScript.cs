@@ -29,7 +29,6 @@ namespace Assets.scripts
         public float          ClickRepeatDurationSeconds = MouseHelper.DEFAULT_CLICK_REPEAT_DURATION_SECONDS;
 
         private DelayClick  mouseLeftDelay;
-        private Rigidbody2D barrierRBody;
 
         void Start()
         {
@@ -39,7 +38,6 @@ namespace Assets.scripts
                                  MouseButtonIndex = DelayClick.MOUSE_LEFT_BUTTON,
                                  ClickEvent       = OnMouseLeftDown
                              };
-            barrierRBody = GetComponent<Rigidbody2D>();
             UpdateText();
             UpdateLifeColorProgress();
         }

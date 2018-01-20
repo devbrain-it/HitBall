@@ -78,7 +78,6 @@ namespace Assets.scripts
         public static Hit FromFullLife(double value)
         {
             var i    = 0;
-            var init = value;
             while (value >= 1000d)
             {
                 value /= 1000d;

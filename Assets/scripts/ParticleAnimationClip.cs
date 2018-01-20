@@ -13,6 +13,8 @@ namespace Assets.scripts
 
         public ParticleSystem Particles { get; }
 
+        public bool IsPlaying => Particles.isPlaying;
+
         public void Play()
         {
             Particles.Restart();
@@ -21,6 +23,11 @@ namespace Assets.scripts
         public void Stop()
         {
             Particles.Stop(true);
+        }
+
+        public void Update()
+        {
+            
         }
     }
 }

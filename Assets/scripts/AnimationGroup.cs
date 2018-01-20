@@ -11,7 +11,6 @@ namespace Assets.scripts
         public event Action TimeUpEvent;
 
         private          IPlayableClip[] clips;
-        private          float           uptimeSeconds;
         private          float           endTimeSeconds;
         private readonly MonoBehaviour   owner;
 
@@ -28,6 +27,7 @@ namespace Assets.scripts
 
         public void SetOwnerActive(bool active)
         {
+            owner.enabled = active;
             owner.gameObject.SetActive(active);
         }
 
@@ -45,6 +45,8 @@ namespace Assets.scripts
 
         public bool Enabled { get; private set; }
 
+        public bool IsPlaying => Enabled && Clips.Any(c => c.IsPlaying);
+
         public void Set(params IPlayableClip[] clipsToSet)
         {
             clips = clipsToSet;
@@ -54,8 +56,6 @@ namespace Assets.scripts
         {
             if (!Enabled)
             {
-                // seconds, then enabled = true
-                uptimeSeconds = 0f;
                 Enabled = true;
 
                 if (BindActiveToPlayback)
@@ -74,8 +74,12 @@ namespace Assets.scripts
         {
             if (Enabled)
             {
-                uptimeSeconds += Time.deltaTime;
-                if (uptimeSeconds >= EndTimeSeconds)
+                foreach (var clip in Clips)
+                {
+                    clip.Update();
+                }
+
+                if (!IsPlaying)
                 {
                     TriggerEnd();
                 }
@@ -107,7 +111,6 @@ namespace Assets.scripts
         {
             Stop();
 
-            uptimeSeconds = 0;
             Enabled       = false;
 
             TimeUpEvent?.Invoke();

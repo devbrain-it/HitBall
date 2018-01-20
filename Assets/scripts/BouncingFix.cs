@@ -43,7 +43,7 @@ namespace Assets.scripts
             var needFix       = Math.Abs(absAngle % 45) < Tolerance || startAngleFix;
             if (needFix)
             {
-                Debug.Log(string.Format("Collision angle: {0}", absAngle));
+                //Debug.Log($"Collision angle: {absAngle}");
 
                 if (startAngleFix)
                 {
@@ -58,7 +58,7 @@ namespace Assets.scripts
 
                     if (collisions >= Bounces)
                     {
-                        Debug.Log(string.Format("Collision {0}", Bounces));
+                        //Debug.Log($"Collision {Bounces}");
                         angle            = Fix(angle);
                         lb.AdditionAngle = angle;
                         collisions       = 0;

@@ -1,8 +1,10 @@
 ﻿namespace Assets.scripts
 {
-    public interface IPlayableClip
+    public interface IPlayableClip : IUpdate
     {
         string Name { get; set; }
+
+        bool IsPlaying { get; }
 
         void Play();
 

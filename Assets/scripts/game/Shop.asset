@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf77e9efd6aefc64b9a8cb4d452945f8, type: 3}
+  m_Name: Shop
+  m_EditorClassIdentifier: 
+  ClickRateSeconds: 0.2
+  Buttons:
+  - {fileID: 11400000, guid: 3a2c83cbe4f013943aa4fab18bd11827, type: 2}
+  - {fileID: 11400000, guid: 75bf9c91b5326da458c941ad78cb0c60, type: 2}
+  - {fileID: 11400000, guid: e33a49cc1e8705249bb056f0d52d1cce, type: 2}

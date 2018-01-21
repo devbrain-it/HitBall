@@ -410,7 +410,7 @@ MonoBehaviour:
   TitleTextObject: {fileID: 355844770}
   ForceTextObject: {fileID: 490677539}
   CostTextObject: {fileID: 332605383}
-  SpawnArea: {fileID: 1090290873}
+  SpawnArea: {fileID: 0}
   IconImage: {fileID: 10333124}
   Icon: {fileID: 21300000, guid: 171e01fce1bca434bab8e4ccd0083544, type: 3}
   Titel: Touch
@@ -1683,7 +1683,7 @@ Prefab:
         type: 2}
       propertyPath: Spawnarea
       value: 
-      objectReference: {fileID: 1090290873}
+      objectReference: {fileID: 1201349297}
     - target: {fileID: 114145873015289036, guid: 95932e5f0278eeb42b1fc427e0f47854,
         type: 2}
       propertyPath: LoadingPanel
@@ -1726,7 +1726,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1090290872}
-  - component: {fileID: 1090290873}
   m_Layer: 0
   m_Name: barriers
   m_TagString: Respawn
@@ -1747,31 +1746,6 @@ Transform:
   m_Father: {fileID: 1201349296}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &1090290873
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1090290871}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: -0.00000047683716, y: 0.24844551}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 15.7138815, y: 9.484755}
-  m_EdgeRadius: 0
 --- !u!1 &1092324883
 GameObject:
   m_ObjectHideFlags: 0
@@ -6654,6 +6628,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1201349296}
+  - component: {fileID: 1201349297}
   m_Layer: 0
   m_Name: barriersSpawn
   m_TagString: Untagged
@@ -6675,6 +6650,35 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!60 &1201349297
+PolygonCollider2D:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1201349295}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Points:
+    m_Paths:
+    - - {x: 0, y: 1}
+      - {x: -0.95105654, y: 0.30901697}
+      - {x: -0.5877852, y: -0.80901706}
+      - {x: 0.58778536, y: -0.80901694}
+      - {x: 0.9510565, y: 0.30901712}
 --- !u!1 &1245511066
 GameObject:
   m_ObjectHideFlags: 0
@@ -6914,7 +6918,7 @@ MonoBehaviour:
   TitleTextObject: {fileID: 2042759847}
   ForceTextObject: {fileID: 287099228}
   CostTextObject: {fileID: 1021391731}
-  SpawnArea: {fileID: 1090290873}
+  SpawnArea: {fileID: 0}
   IconImage: {fileID: 1875195130}
   Icon: {fileID: 21300000, guid: e3539fdc1eb2f2a4faf5e0d863700a36, type: 3}
   Titel: Basketball
@@ -7650,7 +7654,7 @@ MonoBehaviour:
   TitleTextObject: {fileID: 40997486}
   ForceTextObject: {fileID: 1154813180}
   CostTextObject: {fileID: 757841114}
-  SpawnArea: {fileID: 1090290873}
+  SpawnArea: {fileID: 0}
   IconImage: {fileID: 254867026}
   Icon: {fileID: 21300000, guid: ec44fca68ad2e194aa39dc6c3ead1534, type: 3}
   Titel: Ball

@@ -250,7 +250,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 169, y: 0}
+  m_AnchoredPosition: {x: 169.00002, y: 0}
   m_SizeDelta: {x: 300, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &18783910
@@ -266,7 +266,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 0
+    m_Left: -13
     m_Right: 0
     m_Top: 0
     m_Bottom: 0
@@ -410,6 +410,11 @@ Prefab:
       propertyPath: FullUpgradeToggle
       value: 
       objectReference: {fileID: 2125909113}
+    - target: {fileID: 114411673910794182, guid: 95932e5f0278eeb42b1fc427e0f47854,
+        type: 2}
+      propertyPath: InitMoney
+      value: 1000000
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 95932e5f0278eeb42b1fc427e0f47854, type: 2}
   m_IsPrefabParent: 0
@@ -530,7 +535,7 @@ GameObject:
   - component: {fileID: 101288791}
   - component: {fileID: 101288790}
   m_Layer: 0
-  m_Name: SpeedButton_X8
+  m_Name: SpeedButton_X5
   m_TagString: PowerUp
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -687,9 +692,9 @@ MonoBehaviour:
   IconImage: {fileID: 711684587}
   CostText: {fileID: 2020871426}
   TimeText: {fileID: 754989507}
-  Multiplier: 8
+  Multiplier: 4.65
   DurationSeconds: 1200
-  Title: X 8
+  Title: X 5
   Costs: 4000000
   Icon: {fileID: 21300000, guid: 3aac8d867a49432449177233043537c3, type: 3}
 --- !u!1 &128614365
@@ -1574,7 +1579,7 @@ Prefab:
     - target: {fileID: 224547561832423628, guid: 68e0dc69cf693ac42b9a68e78eecf788,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -45
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224547561832423628, guid: 68e0dc69cf693ac42b9a68e78eecf788,
         type: 2}
@@ -1584,7 +1589,7 @@ Prefab:
     - target: {fileID: 224547561832423628, guid: 68e0dc69cf693ac42b9a68e78eecf788,
         type: 2}
       propertyPath: m_SizeDelta.y
-      value: 90
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224547561832423628, guid: 68e0dc69cf693ac42b9a68e78eecf788,
         type: 2}
@@ -1949,7 +1954,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 350618293}
   m_HandleRect: {fileID: 350618292}
   m_Direction: 0
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -2165,7 +2170,7 @@ GameObject:
   - component: {fileID: 724942457}
   - component: {fileID: 724942456}
   m_Layer: 0
-  m_Name: SpeedButton_X20
+  m_Name: SpeedButton_X6
   m_TagString: PowerUp
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2322,9 +2327,9 @@ MonoBehaviour:
   IconImage: {fileID: 1650904497}
   CostText: {fileID: 1731998178}
   TimeText: {fileID: 1714808306}
-  Multiplier: 20
-  DurationSeconds: 24000
-  Title: X 20
+  Multiplier: 5.5
+  DurationSeconds: 1800
+  Title: X 5,5
   Costs: 20000000
   Icon: {fileID: 21300000, guid: 3aac8d867a49432449177233043537c3, type: 3}
 --- !u!1 &741059604
@@ -2689,7 +2694,7 @@ Prefab:
     - target: {fileID: 224704294555489190, guid: f6e0141ae44fdbc46a399333073d81a3,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -45
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224704294555489190, guid: f6e0141ae44fdbc46a399333073d81a3,
         type: 2}
@@ -2699,7 +2704,7 @@ Prefab:
     - target: {fileID: 224704294555489190, guid: f6e0141ae44fdbc46a399333073d81a3,
         type: 2}
       propertyPath: m_SizeDelta.y
-      value: 90
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224704294555489190, guid: f6e0141ae44fdbc46a399333073d81a3,
         type: 2}
@@ -2834,19 +2839,19 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4577985472358148, guid: 163333ca5d1dca14589d9d049dad4ff4, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -0.6
+      value: -0.59575
       objectReference: {fileID: 0}
     - target: {fileID: 4577985472358148, guid: 163333ca5d1dca14589d9d049dad4ff4, type: 2}
       propertyPath: m_LocalScale.x
-      value: 0.3
+      value: 0.3085057
       objectReference: {fileID: 0}
     - target: {fileID: 4925367771903276, guid: 163333ca5d1dca14589d9d049dad4ff4, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 0.6
+      value: 0.59245
       objectReference: {fileID: 0}
     - target: {fileID: 4925367771903276, guid: 163333ca5d1dca14589d9d049dad4ff4, type: 2}
       propertyPath: m_LocalScale.x
-      value: 0.3
+      value: 0.31509173
       objectReference: {fileID: 0}
     - target: {fileID: 4452426838950556, guid: 163333ca5d1dca14589d9d049dad4ff4, type: 2}
       propertyPath: m_LocalPosition.y
@@ -8125,7 +8130,7 @@ Prefab:
     - target: {fileID: 224582814017758640, guid: 14d4487324f33fd4fb59de337d24a287,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -45
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224582814017758640, guid: 14d4487324f33fd4fb59de337d24a287,
         type: 2}
@@ -8135,7 +8140,7 @@ Prefab:
     - target: {fileID: 224582814017758640, guid: 14d4487324f33fd4fb59de337d24a287,
         type: 2}
       propertyPath: m_SizeDelta.y
-      value: 90
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224582814017758640, guid: 14d4487324f33fd4fb59de337d24a287,
         type: 2}

@@ -34,7 +34,16 @@ namespace Assets.scripts
         {
             if (Vector2.Distance(transform.position, Vector2.zero) > 100)
             {
-                transform.position = Vector3.zero;
+                var position = SpawnHelper.RandomPositionInArea(GameScript.Game.Spawnarea);
+                if (position != null)
+                {
+                    transform.position = position.Value;
+                }
+                else
+                {
+                    transform.position = Vector3.zero;
+                }
+                lb.Force.AddTorque(Random.Range(0, 360));
             }
         }
 

@@ -9,6 +9,7 @@ TagManager:
   - Barrier
   - Attacker
   - ExplosionBurst
+  - PowerUp
   layers:
   - Default
   - TransparentFX

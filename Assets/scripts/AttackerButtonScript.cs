@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace Assets.scripts
 {
-    public class AttackerButtonScript : MonoBehaviour
+    public partial class AttackerButtonScript : MonoBehaviour
     {
         public const string TAG = "Attacker";
 
@@ -29,32 +29,34 @@ namespace Assets.scripts
         private double           spawnBallForce;
         private double           baseCosts;
         private double           baseForce;
-        private bool             triggerClickAgain;
         private double           lastTime;
         private HashSet<PowerUp> powerUpEffect;
         private GameObject       ballsSpawnParent;
-        private bool hover;
+        private Button           button;
+        private bool active;
 
         void Start()
         {
             baseCosts        = Costs;
             baseForce        = Force;
-            powerUpEffect    = new HashSet<PowerUp>();
             ballsSpawnParent = GameObject.Find("balls");
+            button           = GetComponent<Button>();
             UpdateText();
         }
 
         void Update()
         {
+            button.interactable = PlayerScript.Player.Money.GreaterThan(Hit.FromFullLife(Costs));
+
             if (spawnBall && ballScript == null && BallPrefab != null)
             {
                 var spawnArea = GameScript.Game.Spawnarea;
-                var bo = SpawnHelper.TrySpawn(BallPrefab, spawnArea.transform.position, spawnArea.bounds.size, Quaternion.identity);
+                var bo        = SpawnHelper.TrySpawn(BallPrefab, spawnArea.transform.position, spawnArea.bounds.size, Quaternion.identity);
                 if (bo != null)
                 {
                     SpawnHelper.SetParentInHierarchy(bo, ballsSpawnParent);
 
-                    Debug.Log("Spawn Ball");
+                    //Debug.Log("Spawn Ball");
                     ballScript          = bo.GetComponent<BallScript>();
                     ballScript.HitForce = spawnBallForce;
                     ballScript.Speed    = Speed;
@@ -63,34 +65,61 @@ namespace Assets.scripts
                     spawnBall = false;
                 }
             }
-        }
 
-        void LateUpdate()
-        {
-            //Debug.Log($"hover: {hover}, leftMouse: {triggerClickAgain}");
-            if ((hover && triggerClickAgain || IsPowerUpMaximum) && Time.time - lastTime >= MouseHelper.DEFAULT_CLICK_REPEAT_DURATION_SECONDS)
+            UpdateFullUpgrade();
+
+            if (IsPowerUpMaximum && IsTimeDelayed)
             {
                 lastTime = Time.time;
                 OnClick();
             }
         }
 
-        private bool IsPowerUpMaximum => powerUpEffect.Contains(PowerUp.MAXIMUM);
+        private void UpdateFullUpgrade()
+        {
+            // wenn geklickt wird und es aktiv ist, wird es hinzugefügt
+            // wenn das Geld alle ist, wird es entfernt, siehe "Upgrade()"
+
+            // klick aktiviert es, wenn es eingeschaltet ist, solange Geld da ist
+            if (MouseHelper.IsMouseLeftDown && GameScript.Game.IsFullUpgradeActive && active)
+            {
+                PowerUps.Add(PowerUp.MAXIMUM);
+            }
+        }
+
+        private bool IsTimeDelayed => Time.time - lastTime >= MouseHelper.DEFAULT_CLICK_REPEAT_DURATION_SECONDS;
+
+        private HashSet<PowerUp> PowerUps
+        {
+            get
+            {
+                var upEffect = powerUpEffect;
+                if (upEffect == null)
+                {
+                    upEffect      = new HashSet<PowerUp>();
+                    powerUpEffect = upEffect;
+                }
+
+                return upEffect;
+            }
+        }
+
+        private bool IsPowerUpMaximum => PowerUps.Contains(PowerUp.MAXIMUM);
 
         public void OnClick()
         {
             var upgrade = Upgrade();
-            if (IsPowerUpMaximum && !upgrade)
+            if (upgrade)
             {
-                powerUpEffect = null;
+                if (!spawnBall)
+                {
+                    UpdateText();
+                }
             }
-
-            if (upgrade && !spawnBall)
+            else
             {
-                UpdateText();
+                PowerUps.Remove(PowerUp.MAXIMUM);
             }
-
-            //triggerClickAgain = MouseHelper.IsMouseLeftDown;
         }
 
         private bool Upgrade()
@@ -116,30 +145,6 @@ namespace Assets.scripts
 
             return hasMoney;
         }
-        
-        void OnMouseEnter()
-        {
-            hover = true;
-            Debug.Log("Enter Mouse");
-        }
-
-        void OnMouseExit()
-        {
-            hover = false;
-            Debug.Log("Exit Mouse");
-        }
-
-        void OnMouseLeftDown()
-        {
-            triggerClickAgain = MouseHelper.IsValidTargetClicked(null);
-            Debug.Log($"MouseLeft Down trigger: {triggerClickAgain}");
-        }
-
-        void OnMouseLeftUp()
-        {
-            triggerClickAgain = !MouseHelper.IsValidTargetClicked(null) && triggerClickAgain;
-            Debug.Log($"MouseLeft Up trigger: {triggerClickAgain}");
-        }
 
         private bool IsSpawnRequired => ballScript == null;
 
@@ -154,12 +159,22 @@ namespace Assets.scripts
             var f           = CostCurveLevel100.Evaluate(playerLevel);
             var costFactor  = f;
             var forceFactor = ForceCurveLevel100.Evaluate(playerLevel);
-            Debug.Log($"Cost xf: {costFactor:0.000}, Force xf: {forceFactor:0.000}");
+            //Debug.Log($"Cost xf: {costFactor:0.000}, Force xf: {forceFactor:0.000}");
 
             Costs += baseCosts * costFactor  * level;
             Force += baseForce * forceFactor * level;
 
             UpdateText();
+        }
+
+        void OnMouseEnter()
+        {
+            active = true;
+        }
+        
+        void OnMouseExit()
+        {
+            active = false;
         }
 
         private void UpgradeForce()
@@ -181,15 +196,6 @@ namespace Assets.scripts
         public void UpgradeToMaximum()
         {
             powerUpEffect.Add(PowerUp.MAXIMUM);
-        }
-
-        private enum PowerUp
-        {
-            /// <summary>
-            /// Löst die maximale Kraft aus,
-            /// die aktuell bezahlt werden kann
-            /// </summary>
-            MAXIMUM
         }
     }
 }

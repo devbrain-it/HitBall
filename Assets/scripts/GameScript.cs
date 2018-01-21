@@ -10,21 +10,22 @@ namespace Assets.scripts
 {
     public class GameScript : MonoBehaviour
     {
-        [Header("UI")]
-        public Collider2D Spawnarea;
-
-        public GameObject    BarrierPrefab;
-        public GameObject    LoadingPanel;
-        public LevelUpScript LevelUpAnimation;
-
+        [Header("UI")]public                      Collider2D     Spawnarea;
+        public                                    GameObject     BarrierPrefab;
+        public                                    GameObject     LoadingPanel;
+        public                                    LevelUpScript  LevelUpAnimation;
         [Header("Barriers"), Range(1, 100)]public int            BarriersToSpawn = 20;
         [Range(                    1, 100)]public double         BarrierLife     = 7;
         public                                    AnimationCurve BarrierLifeMultiplicator;
-        [HideInInspector]public                   bool           CanSpawnBarriers = true;
+        [HideInInspector]              public     bool           CanSpawnBarriers = true;
+        [Header("Store Power Actions")]public     Toggle         FullUpgradeToggle;
 
-        public        bool       InLevelUp   { get; private set; }
-        public        double     MoneyToEarn { get; private set; }
-        public static GameScript Game        { get; private set; }
+        public static GameScript Game { get; private set; }
+
+        public bool   InLevelUp   { get; private set; }
+        public double MoneyToEarn { get; private set; }
+
+        public bool IsFullUpgradeActive => FullUpgradeToggle.isOn;
 
         // Use this for initialization
         void Start()

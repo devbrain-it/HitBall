@@ -118,9 +118,9 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 224277075154468570}
+  - component: {fileID: 114145873015289036}
   - component: {fileID: 114411673910794182}
   - component: {fileID: 114634560616650128}
-  - component: {fileID: 114145873015289036}
   - component: {fileID: 223220471979144834}
   m_Layer: 0
   m_Name: PlayerInfo
@@ -194,8 +194,8 @@ MonoBehaviour:
     type: 2}
   LoadingPanel: {fileID: 0}
   LevelUpAnimation: {fileID: 0}
-  BarriersToSpawn: 20
-  BarrierLife: 7
+  BarriersToSpawn: 14
+  BarrierLife: 6
   BarrierLifeMultiplicator:
     serializedVersion: 2
     m_Curve:
@@ -221,6 +221,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 0
   CanSpawnBarriers: 1
+  FullUpgradeToggle: {fileID: 0}
 --- !u!114 &114293248308397534
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -264,7 +265,7 @@ MonoBehaviour:
   RemainingMoneyText: {fileID: 114884796544624366}
   RemainingMoneySlider: {fileID: 114480184009575336}
   Level: 1
-  InitMoney: 999
+  InitMoney: 0
 --- !u!114 &114480184009575336
 MonoBehaviour:
   m_ObjectHideFlags: 1

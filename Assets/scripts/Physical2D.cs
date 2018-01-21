@@ -29,7 +29,7 @@ namespace Assets.scripts
 
         protected virtual void BeforeUpdateSpeed()
         {
-            lb.Speed = Speed;
+            lb.Speed = Speed * PowerUpScript.Instance.MultiplierEffect;
         }
 
         /// <summary>
@@ -38,8 +38,7 @@ namespace Assets.scripts
         void Update()
         {
             BeforeUpdateSpeed();
-            var handle = OnUpdateEvent;
-            if (handle != null) handle.Invoke();
+            OnUpdateEvent?.Invoke();
             AfterUpdate();
         }
 

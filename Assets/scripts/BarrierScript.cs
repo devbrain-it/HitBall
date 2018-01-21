@@ -80,14 +80,6 @@ namespace Assets.scripts
             {
                 DoDemage(hitComponent.GetHitForce());
             }
-            else
-            {
-                Debug.LogWarning("Barrier hit by explosion!!!!");
-
-                if (coll.gameObject.CompareTag(ExplosionScript.TAG))
-                {
-                }
-            }
         }
 
         public void UpdateText()

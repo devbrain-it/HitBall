@@ -51,7 +51,7 @@ namespace Assets.scripts
                 return FromFullLife(0);
             }
 
-            double result = Math.Max(0, valA - valB);
+            var result = Math.Min(Math.Max(0, valA - valB), double.MaxValue);
             return FromFullLife(result);
         }
 
@@ -59,7 +59,7 @@ namespace Assets.scripts
         {
             var valA   = a.FullLife;
             var valB   = b.FullLife;
-            var result = Math.Min(double.MaxValue, valA + valB);
+            var result = Math.Max(0, Math.Min(double.MaxValue, valA + valB));
             return FromFullLife(result);
         }
 
@@ -88,7 +88,7 @@ namespace Assets.scripts
 
         public override string ToString()
         {
-            return string.Format("{0:0.0} {1}", Life, UNITS[Unit]).Trim().Replace(".0", string.Empty);
+            return $"{Life:0.0} {UNITS[Unit]}".Trim().Replace(".0", string.Empty);
         }
     }
 }

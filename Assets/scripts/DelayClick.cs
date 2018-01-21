@@ -26,11 +26,7 @@ namespace Assets.scripts
             if (Input.GetMouseButton(MOUSE_LEFT_BUTTON) && Time.time - lastTime >= DelaySeconds)
             {
                 lastTime   = Time.time;
-                var handle = ClickEvent;
-                if (handle != null)
-                {
-                    handle();
-                }
+                ClickEvent?.Invoke();
             }
         }
     }

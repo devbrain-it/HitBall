@@ -111,7 +111,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0.38598633, y: -0.0005187988}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -120,9 +120,9 @@ BoxCollider2D:
     adaptiveTilingThreshold: 0
     drawMode: 0
     adaptiveTiling: 0
-  m_AutoTiling: 0
+  m_AutoTiling: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 69.35608, y: 85.91821}
   m_EdgeRadius: 0
 --- !u!114 &114241660580405410
 MonoBehaviour:
@@ -311,7 +311,6 @@ MonoBehaviour:
   TitleTextObject: {fileID: 114241660580405410}
   ForceTextObject: {fileID: 114639862433181390}
   CostTextObject: {fileID: 114806360699454022}
-  SpawnArea: {fileID: 0}
   IconImage: {fileID: 114348924948964094}
   Icon: {fileID: 21300000, guid: ec44fca68ad2e194aa39dc6c3ead1534, type: 3}
   Titel: Ball

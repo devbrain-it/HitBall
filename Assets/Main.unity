@@ -1173,7 +1173,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: -35}
-  m_SizeDelta: {x: 30, y: 30}
+  m_SizeDelta: {x: 50, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &352026070
 MonoBehaviour:
@@ -1579,7 +1579,7 @@ Prefab:
     - target: {fileID: 224547561832423628, guid: 68e0dc69cf693ac42b9a68e78eecf788,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -45
       objectReference: {fileID: 0}
     - target: {fileID: 224547561832423628, guid: 68e0dc69cf693ac42b9a68e78eecf788,
         type: 2}
@@ -1589,7 +1589,7 @@ Prefab:
     - target: {fileID: 224547561832423628, guid: 68e0dc69cf693ac42b9a68e78eecf788,
         type: 2}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 90
       objectReference: {fileID: 0}
     - target: {fileID: 224547561832423628, guid: 68e0dc69cf693ac42b9a68e78eecf788,
         type: 2}
@@ -1954,7 +1954,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 350618293}
   m_HandleRect: {fileID: 350618292}
   m_Direction: 0
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -2030,7 +2030,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: -35}
-  m_SizeDelta: {x: 30, y: 30}
+  m_SizeDelta: {x: 50, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &711684587
 MonoBehaviour:
@@ -2554,12 +2554,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Ball
-
-
-    0
-
-    0'
+  m_Text: <Cost>
 --- !u!222 &804771404
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2694,7 +2689,7 @@ Prefab:
     - target: {fileID: 224704294555489190, guid: f6e0141ae44fdbc46a399333073d81a3,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -45
       objectReference: {fileID: 0}
     - target: {fileID: 224704294555489190, guid: f6e0141ae44fdbc46a399333073d81a3,
         type: 2}
@@ -2704,7 +2699,7 @@ Prefab:
     - target: {fileID: 224704294555489190, guid: f6e0141ae44fdbc46a399333073d81a3,
         type: 2}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 90
       objectReference: {fileID: 0}
     - target: {fileID: 224704294555489190, guid: f6e0141ae44fdbc46a399333073d81a3,
         type: 2}
@@ -8130,7 +8125,7 @@ Prefab:
     - target: {fileID: 224582814017758640, guid: 14d4487324f33fd4fb59de337d24a287,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -45
       objectReference: {fileID: 0}
     - target: {fileID: 224582814017758640, guid: 14d4487324f33fd4fb59de337d24a287,
         type: 2}
@@ -8140,7 +8135,7 @@ Prefab:
     - target: {fileID: 224582814017758640, guid: 14d4487324f33fd4fb59de337d24a287,
         type: 2}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 90
       objectReference: {fileID: 0}
     - target: {fileID: 224582814017758640, guid: 14d4487324f33fd4fb59de337d24a287,
         type: 2}
@@ -8523,12 +8518,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Ball
-
-
-    0
-
-    0'
+  m_Text: <Cost>
 --- !u!222 &1330025780
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -9090,7 +9080,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: -35}
-  m_SizeDelta: {x: 30, y: 30}
+  m_SizeDelta: {x: 50, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1650904497
 MonoBehaviour:
@@ -9488,12 +9478,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Ball
-
-
-    0
-
-    0'
+  m_Text: <Cost>
 --- !u!222 &1731998179
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -9696,7 +9681,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: -35}
-  m_SizeDelta: {x: 30, y: 30}
+  m_SizeDelta: {x: 50, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1838318367
 MonoBehaviour:
@@ -10158,12 +10143,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Ball
-
-
-    0
-
-    0'
+  m_Text: <Cost>
 --- !u!222 &2020871427
 CanvasRenderer:
   m_ObjectHideFlags: 0

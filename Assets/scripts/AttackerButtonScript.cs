@@ -13,7 +13,6 @@ namespace Assets.scripts
         public Text       TitleTextObject;
         public Text       ForceTextObject;
         public Text       CostTextObject;
-        public Collider2D SpawnArea;
         public Image      IconImage;
 
         public Sprite         Icon;
@@ -49,7 +48,8 @@ namespace Assets.scripts
         {
             if (spawnBall && ballScript == null && BallPrefab != null)
             {
-                var bo = SpawnHelper.TrySpawn(BallPrefab, SpawnArea.transform.position, SpawnArea.bounds.size, Quaternion.identity);
+                var spawnArea = GameScript.Game.Spawnarea;
+                var bo = SpawnHelper.TrySpawn(BallPrefab, spawnArea.transform.position, spawnArea.bounds.size, Quaternion.identity);
                 if (bo != null)
                 {
                     SpawnHelper.SetParentInHierarchy(bo, ballsSpawnParent);

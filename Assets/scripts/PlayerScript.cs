@@ -78,5 +78,10 @@ namespace Assets.scripts
 
             return 0;
         }
+
+        public void AddMoney(double money)
+        {
+            Money += Hit.FromFullLife(money);
+        }
     }
 }

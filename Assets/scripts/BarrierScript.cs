@@ -28,7 +28,9 @@ namespace Assets.scripts
         public double         FullLife;
         public float          ClickRepeatDurationSeconds = MouseHelper.DEFAULT_CLICK_REPEAT_DURATION_SECONDS;
 
-        private DelayClick  mouseLeftDelay;
+        private DelayClick      mouseLeftDelay;
+        private ExplosionScript explosion;
+        private bool            destroyed;
 
         void Start()
         {
@@ -40,10 +42,18 @@ namespace Assets.scripts
                              };
             UpdateText();
             UpdateLifeColorProgress();
+            explosion = GetComponent<ExplosionScript>();
+            explosion.Init();
         }
 
         void Update()
         {
+            if (destroyed)
+            {
+                GetComponent<SpriteRenderer>().enabled = false;
+                return;
+            }
+
             mouseLeftDelay.Check();
 
             UpdateText();
@@ -52,7 +62,7 @@ namespace Assets.scripts
         protected virtual void OnMouseLeftDown()
         {
             var    b      = GameObject.FindGameObjectsWithTag("Respawn");
-            Action attack = () => hit(PlayerScript.Player.GetClickHitForce());
+            Action attack = () => DoDemage(PlayerScript.Player.GetClickHitForce());
             if (b != null)
             {
                 MouseHelper.PerformOnValidTargetObject(gameObject, attack, b);
@@ -68,11 +78,11 @@ namespace Assets.scripts
             var hitComponent = coll.gameObject.GetComponent<IHit>();
             if (hitComponent != null)
             {
-                hit(hitComponent.GetHitForce());
+                DoDemage(hitComponent.GetHitForce());
             }
             else
             {
-                Debug.Log("Explosion!!!!");
+                Debug.LogWarning("Barrier hit by explosion!!!!");
 
                 if (coll.gameObject.CompareTag(ExplosionScript.TAG))
                 {
@@ -85,7 +95,7 @@ namespace Assets.scripts
             LifepointsText.text = Hit.FromFullLife(Life).ToString();
         }
 
-        private void hit(Hit hit)
+        public void DoDemage(Hit hit, bool showHitAnimation = true)
         {
             if (GameScript.Game.LoadingPanel.gameObject.activeSelf)
             {
@@ -93,13 +103,14 @@ namespace Assets.scripts
             }
 
             //Debug.Log(string.Format("Hit BarrierScript: {0}", hit.FullLife));
-            var h = Hit.FromFullLife(Life);
-            h     -= hit;
-            life  =  h.FullLife;
+            var remainingPower = Math.Max(1, hit.FullLife - Life);
+            var h              = Hit.FromFullLife(Life);
+            h                  -= hit;
+            life               =  h.FullLife;
             UpdateLifeColorProgress();
 
             var hitAnimation = PlayAnim;
-            if (hitAnimation != null)
+            if (hitAnimation != null && showHitAnimation)
             {
                 hitAnimation.Play();
             }
@@ -107,28 +118,27 @@ namespace Assets.scripts
             var destroy = h.IsZero;
             if (destroy)
             {
-                GetComponent<CircleCollider2D>().enabled = false;
+                // entfernen!
+                //GetComponent<CircleCollider2D>().enabled = false;
 
-                Explode();
-
-                Destroy(gameObject);
+                Explode(remainingPower);
+                destroyed = true;
             }
 
-            PlayerScript.Player.Money += hit;
+            PlayerScript.Player.AddMoney(remainingPower);
 
             NotifyHit(destroy);
         }
 
-        private void Explode()
+        private void Explode(double remainingPower)
         {
-            var explosionDie = GetComponent<ExplosionScript>();
+            LifepointsText.enabled = false;
 
-            var explosion                = Instantiate(explosionDie.explosionPrefab, transform.position, explosionDie.explosionPrefab.transform.rotation);
-            var explosionScript          = explosion.GetComponent<ExplosionScript>();
-            var radius                   = GetComponent<CircleCollider2D>().radius;
-            explosionScript.MiniumRadius = Math.Max(1, radius);
-            explosionScript.TotalRadius  = 5;
-            explosionScript.Explode();
+            // collider wird zum Trigger beim Aufruf von ExplodeAsTrigger
+            var minRadius = GetComponent<CircleCollider2D>().radius;
+
+            // endgültig! -> Dieses gameObject wird endgültig zerstört durch diesen Aufruf
+            explosion.ExplodeAsTrigger(minRadius, remainingPower);
         }
 
         private void UpdateLifeColorProgress()

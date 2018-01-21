@@ -46,10 +46,7 @@ namespace Assets.scripts
             return hit.collider != null && (toIgnore == null || hit.collider.gameObject == toIgnore);
         }
 
-        public static bool IsMouseLeftDown
-        {
-            get { return Input.GetMouseButton(0); }
-        }
+        public static bool IsMouseLeftDown => Input.GetMouseButton(0);
 
         public const float DEFAULT_CLICK_REPEAT_DURATION_SECONDS = 0.3f;
     }

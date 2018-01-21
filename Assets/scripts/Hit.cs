@@ -10,15 +10,9 @@ namespace Assets.scripts
 
         public int Unit { get; set; }
 
-        public bool IsZero
-        {
-            get { return Life <= 0 && Unit == 0; }
-        }
+        public bool IsZero => Life <= 0 && Unit == 0;
 
-        public double FullLife
-        {
-            get { return getLongLife(this); }
-        }
+        public double FullLife => getLongLife(this);
 
         public bool GreaterThan(Hit b)
         {

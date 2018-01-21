@@ -1,5 +1,7 @@
 ﻿using System;
+using Assets.scripts.clip;
 using UnityEngine;
+using AnimationClip = Assets.scripts.clip.AnimationClip;
 
 namespace Assets.scripts
 {
@@ -27,7 +29,7 @@ namespace Assets.scripts
         {
             if (animations == null)
             {
-                animations             =  new AnimationGroup(this, 2f, false);
+                animations             =  new AnimationGroup(this, false);
                 animations.TimeUpEvent += onAnimationsEnd;
                 animations.Set(new AnimationClip(StarAnimation,        StarAnimationName),
                                new AnimationClip(LevelUpTextAnimation, LevelUpAnimationName),

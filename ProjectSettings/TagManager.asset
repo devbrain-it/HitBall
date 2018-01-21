@@ -43,6 +43,9 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: DeadObject
+    uniqueID: 3307941551
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0

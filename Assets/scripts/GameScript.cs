@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Experimental.XR;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 namespace Assets.scripts
 {
@@ -14,17 +17,14 @@ namespace Assets.scripts
         public GameObject    LoadingPanel;
         public LevelUpScript LevelUpAnimation;
 
-        [Header("Barriers")]
-        [Range(1, 100)]
-        public int BarriersToSpawn = 20;
+        [Header("Barriers"), Range(1, 100)]public int            BarriersToSpawn = 20;
+        [Range(                    1, 100)]public double         BarrierLife     = 7;
+        public                                    AnimationCurve BarrierLifeMultiplicator;
+        [HideInInspector]public                   bool           CanSpawnBarriers = true;
 
-        [Range(1, 100)]public   double         BarrierLife = 7;
-        public                  AnimationCurve BarrierLifeMultiplicator;
-        [HideInInspector]public bool           CanSpawnBarriers = true;
-        public                  bool           InLevelUp { get; private set; }
-
-        public static GameScript Game        { get; private set; }
+        public        bool       InLevelUp   { get; private set; }
         public        double     MoneyToEarn { get; private set; }
+        public static GameScript Game        { get; private set; }
 
         // Use this for initialization
         void Start()
@@ -34,10 +34,7 @@ namespace Assets.scripts
             Time.timeScale   = 1;
         }
 
-        public static bool HasBarriers
-        {
-            get { return FindAllBarriers().Any(); }
-        }
+        public static bool HasBarriers => FindAllBarriers().Any();
 
         private static List<BarrierScript> FindAllBarriers()
         {
@@ -70,15 +67,19 @@ namespace Assets.scripts
 
         private void SpawnBarrier()
         {
-            var pos  = Spawnarea.transform.position;
-            var size = Spawnarea.bounds.size;
-            var rot  = Quaternion.identity;
-
-            var b = SpawnHelper.SpawnPrefab(BarrierPrefab, pos, size, rot);
-            if (b != null)
+            var spawnArea = Spawnarea;
+            if (spawnArea != null)
             {
-                InitBarrier(b);
-                UpdateLoadingPanel();
+                var position = SpawnHelper.RandomPositionInArea(spawnArea);
+                if (position != null)
+                {
+                    var b = SpawnHelper.TrySpawn(BarrierPrefab, position.Value, Quaternion.identity);
+                    if (b != null)
+                    {
+                        InitBarrier(b);
+                        UpdateLoadingPanel();
+                    }
+                }
             }
         }
 
@@ -111,10 +112,7 @@ namespace Assets.scripts
             }
         }
 
-        private Slider LevelSlider
-        {
-            get { return LoadingPanel.GetComponentInChildren<Slider>(); }
-        }
+        private Slider LevelSlider => LoadingPanel.GetComponentInChildren<Slider>();
 
         private void InitBarrier(GameObject b)
         {
@@ -125,7 +123,7 @@ namespace Assets.scripts
 
         public void Hit(bool destroyed)
         {
-            if (destroyed)
+            if (destroyed && !InLevelUp)
             {
                 var hasBarriers = HasBarriers;
                 //Debug.Log(string.Format("Has barriers: {0}", hasBarriers));

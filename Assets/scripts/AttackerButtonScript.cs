@@ -34,6 +34,7 @@ namespace Assets.scripts
         private double           lastTime;
         private HashSet<PowerUp> powerUpEffect;
         private GameObject       ballsSpawnParent;
+        private bool hover;
 
         void Start()
         {
@@ -46,15 +47,9 @@ namespace Assets.scripts
 
         void Update()
         {
-            if ((triggerClickAgain || IsPowerUpMaximum) && Time.time - lastTime >= MouseHelper.DEFAULT_CLICK_REPEAT_DURATION_SECONDS)
-            {
-                lastTime = Time.time;
-                OnClick();
-            }
-
             if (spawnBall && ballScript == null && BallPrefab != null)
             {
-                var bo = SpawnHelper.SpawnPrefab(BallPrefab, SpawnArea.transform.position, SpawnArea.bounds.size, Quaternion.identity);
+                var bo = SpawnHelper.TrySpawn(BallPrefab, SpawnArea.transform.position, SpawnArea.bounds.size, Quaternion.identity);
                 if (bo != null)
                 {
                     SpawnHelper.SetParentInHierarchy(bo, ballsSpawnParent);
@@ -67,6 +62,16 @@ namespace Assets.scripts
 
                     spawnBall = false;
                 }
+            }
+        }
+
+        void LateUpdate()
+        {
+            //Debug.Log($"hover: {hover}, leftMouse: {triggerClickAgain}");
+            if ((hover && triggerClickAgain || IsPowerUpMaximum) && Time.time - lastTime >= MouseHelper.DEFAULT_CLICK_REPEAT_DURATION_SECONDS)
+            {
+                lastTime = Time.time;
+                OnClick();
             }
         }
 
@@ -85,7 +90,7 @@ namespace Assets.scripts
                 UpdateText();
             }
 
-            triggerClickAgain = MouseHelper.IsMouseLeftDown;
+            //triggerClickAgain = MouseHelper.IsMouseLeftDown;
         }
 
         private bool Upgrade()
@@ -111,16 +116,34 @@ namespace Assets.scripts
 
             return hasMoney;
         }
-
-        private bool IsSpawnRequired
+        
+        void OnMouseEnter()
         {
-            get { return ballScript == null; }
+            hover = true;
+            Debug.Log("Enter Mouse");
         }
 
-        public bool IsTouchAttacker
+        void OnMouseExit()
         {
-            get { return BallPrefab == null; }
+            hover = false;
+            Debug.Log("Exit Mouse");
         }
+
+        void OnMouseLeftDown()
+        {
+            triggerClickAgain = MouseHelper.IsValidTargetClicked(null);
+            Debug.Log($"MouseLeft Down trigger: {triggerClickAgain}");
+        }
+
+        void OnMouseLeftUp()
+        {
+            triggerClickAgain = !MouseHelper.IsValidTargetClicked(null) && triggerClickAgain;
+            Debug.Log($"MouseLeft Up trigger: {triggerClickAgain}");
+        }
+
+        private bool IsSpawnRequired => ballScript == null;
+
+        public bool IsTouchAttacker => BallPrefab == null;
 
         private void UpgradeCosts()
         {
@@ -131,7 +154,7 @@ namespace Assets.scripts
             var f           = CostCurveLevel100.Evaluate(playerLevel);
             var costFactor  = f;
             var forceFactor = ForceCurveLevel100.Evaluate(playerLevel);
-            Debug.Log(string.Format("Cost xf: {0:0.000}, Force xf: {1:0.000}", costFactor, forceFactor));
+            Debug.Log($"Cost xf: {costFactor:0.000}, Force xf: {forceFactor:0.000}");
 
             Costs += baseCosts * costFactor  * level;
             Force += baseForce * forceFactor * level;

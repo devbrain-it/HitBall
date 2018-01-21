@@ -34,7 +34,7 @@ namespace Assets.scripts
 
         private void UpdateColor()
         {
-            Color = LifetimeColors.Evaluate(1 - float.Parse(string.Format("{0:0.000}", Progress)));
+            Color = LifetimeColors.Evaluate(1 - Single.Parse(String.Format("{0:0.000}", Progress)));
             RenderColor();
         }
 
@@ -45,5 +45,23 @@ namespace Assets.scripts
                 Renderer.color = Color;
             }
         }
+
+        public static Color AdjustHueColor(Color targetColor, Color source, bool holdSaturation = true, bool holdBrightness = true)
+        {
+            float hue;
+            float saturation;
+            float brightness;
+
+            Color.RGBToHSV(targetColor, out hue, out saturation, out brightness);
+            var toHue    = hue;
+            var toSat    = saturation;
+            var toBright = brightness;
+            Color.RGBToHSV(source, out hue, out saturation, out brightness);
+
+            var newColor = Color.HSVToRGB(toHue, holdSaturation ? saturation : toSat, holdBrightness ? brightness : toBright);
+            return newColor;
+        }
+
+        public static readonly Color TRANSPARENT = new Color(0, 0, 0, 0);
     }
 }

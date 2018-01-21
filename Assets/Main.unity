@@ -358,7 +358,7 @@ Prefab:
     - target: {fileID: 224547561832423628, guid: 68e0dc69cf693ac42b9a68e78eecf788,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -45
       objectReference: {fileID: 0}
     - target: {fileID: 224547561832423628, guid: 68e0dc69cf693ac42b9a68e78eecf788,
         type: 2}
@@ -368,7 +368,7 @@ Prefab:
     - target: {fileID: 224547561832423628, guid: 68e0dc69cf693ac42b9a68e78eecf788,
         type: 2}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 224547561832423628, guid: 68e0dc69cf693ac42b9a68e78eecf788,
         type: 2}
@@ -696,7 +696,7 @@ Prefab:
     - target: {fileID: 224704294555489190, guid: f6e0141ae44fdbc46a399333073d81a3,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -45
       objectReference: {fileID: 0}
     - target: {fileID: 224704294555489190, guid: f6e0141ae44fdbc46a399333073d81a3,
         type: 2}
@@ -706,7 +706,7 @@ Prefab:
     - target: {fileID: 224704294555489190, guid: f6e0141ae44fdbc46a399333073d81a3,
         type: 2}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 224704294555489190, guid: f6e0141ae44fdbc46a399333073d81a3,
         type: 2}
@@ -1136,8 +1136,8 @@ Transform:
   m_Father: {fileID: 1201349296}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &1090290873
-BoxCollider2D:
+--- !u!60 &1090290873
+PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -1148,7 +1148,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.39}
+  m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -1158,9 +1158,12 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 15.62, y: 9.3}
-  m_EdgeRadius: 0
+  m_Points:
+    m_Paths:
+    - - {x: 7.820195, y: 5.007164}
+      - {x: -7.817092, y: 4.9633145}
+      - {x: -7.818859, y: -4.0949984}
+      - {x: 7.864396, y: -4.1165676}
 --- !u!1 &1092324883
 GameObject:
   m_ObjectHideFlags: 0
@@ -6012,7 +6015,7 @@ Prefab:
     - target: {fileID: 224582814017758640, guid: 14d4487324f33fd4fb59de337d24a287,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -45
       objectReference: {fileID: 0}
     - target: {fileID: 224582814017758640, guid: 14d4487324f33fd4fb59de337d24a287,
         type: 2}
@@ -6022,7 +6025,7 @@ Prefab:
     - target: {fileID: 224582814017758640, guid: 14d4487324f33fd4fb59de337d24a287,
         type: 2}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 224582814017758640, guid: 14d4487324f33fd4fb59de337d24a287,
         type: 2}

@@ -18,8 +18,10 @@ namespace Assets.scripts.fx
         public                            LineRenderer   BurstExplosionRenderer;
         public                            int            BurstElements = 16;
         public                            Gradient       BurstLifeTimeColor;
-        [Range(0.5f, 10f)]public          float          BurstWidthStart   = 0.5f;
-        public                            double         BurstMinimumForce = 1;
+        [Range(0.5f, 10f)]public          float          BurstWidthStart       = 0.5f;
+        public                            double         BurstMinimumForce     = 1;
+        public                            Color          AdditiveFallbackColor = Color.black;
+        public                            ColorBehavior  BurstColorMixMode     = ColorBehavior.RANDOM_COLOR;
 
         private float            miniumRadius;
         private CircleCollider2D effector;
@@ -31,6 +33,7 @@ namespace Assets.scripts.fx
         private ParticleSystem   particles;
         private float            progress;
         private double           power;
+        private Color            randomColor;
 
         public float Effect { get; private set; }
 
@@ -96,7 +99,7 @@ namespace Assets.scripts.fx
                     // die explosion
                     var demage = Math.Max(f * power, BurstMinimumForce);
                     //demage     = power;
-                    transform.lossyScale.Scale((float)demage * Vector3.one * (1 - f));
+                    transform.lossyScale.Scale((float) demage * Vector3.one * (1 - f));
                     barrierScript.DoDemage(Hit.FromFullLife(demage), false);
                 }
             }
@@ -130,9 +133,41 @@ namespace Assets.scripts.fx
             BurstExplosionRenderer.startWidth = width;
             BurstExplosionRenderer.endWidth   = BurstExplosionRenderer.startWidth;
 
-            var a                                 = GetComponent<SpriteRenderer>().color;
-            var b                                 = BurstLifeTimeColor.Evaluate(progress);
-            BurstExplosionRenderer.material.color = a * b;
+            var spriteRenderer = GetComponent<SpriteRenderer>();
+            var a              = spriteRenderer == null ? AdditiveFallbackColor : spriteRenderer.color;
+            var b              = BurstLifeTimeColor.Evaluate(progress);
+            switch (BurstColorMixMode)
+            {
+                case ColorBehavior.MULTIPLY:
+                    BurstExplosionRenderer.material.color = a * b;
+                    break;
+                case ColorBehavior.ADDITIVE:
+                    BurstExplosionRenderer.material.color = a + b;
+                    break;
+                case ColorBehavior.SUBSTRACTED:
+                    BurstExplosionRenderer.material.color = a - b;
+                    break;
+                case ColorBehavior.RANDOM_COLOR:
+                    BurstExplosionRenderer.material.color = b * randomColor;
+                    break;
+                case ColorBehavior.RANDOM_COLOR_ADDITIVE:
+                    BurstExplosionRenderer.material.color = b + randomColor;
+                    break;
+                case ColorBehavior.RANDOM_COLOR_SUBSTRACTED:
+                    BurstExplosionRenderer.material.color = randomColor - b;
+                    break;
+                case ColorBehavior.RANDOM_COLOR_SUBSTRACTED_INV:
+                    BurstExplosionRenderer.material.color = b - randomColor;
+                    break;
+                case ColorBehavior.COLOR_OVERTIME_ONLY:
+                    BurstExplosionRenderer.material.color = b;
+                    break;
+                case ColorBehavior.FALLBACK_ONLY:
+                    BurstExplosionRenderer.material.color = a;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
 
             if (!BurstExplosionRenderer.enabled)
             {
@@ -164,7 +199,6 @@ namespace Assets.scripts.fx
                 Debug.LogWarning("No Explosion Prefab to clone");
                 return;
             }
-
 
             CreateExplosionFromPrefab(source);
 
@@ -211,12 +245,12 @@ namespace Assets.scripts.fx
             runExplosion = true;
             enabled      = true;
 
-            ColorizeParticles((ParticleAnimationClip) animations[0], tintColorParticles, randomColor);
+            this.randomColor = ColorizeParticles((ParticleAnimationClip) animations[0], tintColorParticles, randomColor);
 
             animations.Play();
         }
 
-        private static void ColorizeParticles(ParticleAnimationClip clip, Color? tintColorParticles, bool randomColor)
+        private static Color ColorizeParticles(ParticleAnimationClip clip, Color? tintColorParticles, bool randomColor)
         {
             if (randomColor)
             {
@@ -226,6 +260,8 @@ namespace Assets.scripts.fx
             {
                 clip.TintColor = tintColorParticles.Value;
             }
+
+            return clip.TintColor;
         }
 
         public void Init()

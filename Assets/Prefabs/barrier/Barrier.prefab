@@ -236,6 +236,8 @@ MonoBehaviour:
     m_NumAlphaKeys: 3
   BurstWidthStart: 1
   BurstMinimumForce: 1
+  AdditiveFallbackColor: {r: 0, g: 0, b: 0, a: 1}
+  BurstColorMixMode: 8
 --- !u!114 &114430307005247616
 MonoBehaviour:
   m_ObjectHideFlags: 1

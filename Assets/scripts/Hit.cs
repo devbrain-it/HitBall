@@ -1,44 +1,52 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Assets.scripts
 {
     public struct Hit
     {
-        public const string UNITS = " aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ";
+        public const  string UNITS = " aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ";
+        private const double BUCKS = 1000d;
+        private       string text;
+        private       int    floats;
+        private       double value;
 
-        public double Life { get; set; }
+        public double Life { get; private set; }
 
-        public int Unit { get; set; }
+        public int Multiplier { get; private set; }
 
-        public bool IsZero => Life <= 0 && Unit == 0;
+        public int Index { get; private set; }
+
+        public bool IsZero => Life <= 0 && Multiplier == 0 && Index == 0;
 
         public double FullLife => getLongLife(this);
 
         public bool GreaterThan(Hit b)
         {
-            var aLife = (double) getLongLife(this);
-            var bLife = (double) getLongLife(b);
+            var aLife = getLongLife(this);
+            var bLife = getLongLife(b);
             return aLife - bLife > 0;
         }
 
         public bool GreaterThanOrEqual(Hit b)
         {
-            var aLife = (double) getLongLife(this);
-            var bLife = (double) getLongLife(b);
+            var aLife = getLongLife(this);
+            var bLife = getLongLife(b);
             return aLife - bLife >= 0;
         }
 
         public bool LowerThan(Hit b)
         {
-            var aLife = (double) getLongLife(this);
-            var bLife = (double) getLongLife(b);
+            var aLife = getLongLife(this);
+            var bLife = getLongLife(b);
             return aLife - bLife < 0;
         }
 
         public bool LowerThanOrEqual(Hit b)
         {
-            var aLife = (double) getLongLife(this);
-            var bLife = (double) getLongLife(b);
+            var aLife = getLongLife(this);
+            var bLife = getLongLife(b);
             return aLife - bLife <= 0;
         }
 
@@ -48,7 +56,7 @@ namespace Assets.scripts
             var valB = b.FullLife;
             if (valA < valB)
             {
-                return FromFullLife(0);
+                return FromFullLife(0, Math.Max(a.floats, b.floats));
             }
 
             var result = Math.Min(Math.Max(0, valA - valB), double.MaxValue);
@@ -59,36 +67,76 @@ namespace Assets.scripts
         {
             var valA   = a.FullLife;
             var valB   = b.FullLife;
-            var result = Math.Max(0, Math.Min(double.MaxValue, valA + valB));
-            return FromFullLife(result);
+            var result = Math.Max(0,                       Math.Min(double.MaxValue, valA + valB));
+            return FromFullLife(result, Math.Max(a.floats, b.floats));
         }
 
-        private static ulong getLongLife(Hit a)
+        private static double getLongLife(Hit a)
         {
-            var valDbl = a.Life * Math.Pow(1000, a.Unit);
-            return (ulong) valDbl;
+            return a.value;
         }
 
-        public static Hit FromFullLife(double value)
+        public static Hit FromFullLife(double life, int floats = 2)
         {
-            var i    = 0;
-            while (value >= 1000d)
+            var multiplier = 0;
+            var index      = 0;
+            var fullLife   = life;
+            while (life >= BUCKS)
             {
-                value /= 1000d;
-                i++;
+                life /= BUCKS;
+                index++;
+                if (index > UNITS.Length)
+                {
+                    index = 0;
+                    multiplier++;
+                }
             }
 
-            //Assert.AreEqual(init, value * Math.Pow(1000, i), 0, "Invalid number range!");
             return new Hit
                    {
-                       Life = value,
-                       Unit = i
+                       value      = fullLife,
+                       Life       = life,
+                       Multiplier = multiplier,
+                       Index      = index,
+                       floats     = floats,
+                       text       = makeText(life, multiplier, index, floats)
                    };
+        }
+
+        private static string makeText(double visibleMoney, int generations, int unit, int floats)
+        {
+            var generationUnit = UNITS.Last().ToString();
+
+            var units = generations.For(generationUnit, createEntry, createResultFromEntries);
+            var end   = floats.For("0", (i, v) => v, vals => string.Join(string.Empty, vals));
+
+            if (visibleMoney - Math.Floor(visibleMoney) > 0)
+            {
+                return ($"{visibleMoney:0.00}".Replace("." + end, string.Empty).Replace("," + end, string.Empty) + $" {units}{UNITS[unit]}").Trim();
+            }
+
+            return ($"{visibleMoney}".Replace("." + end, string.Empty).Replace("," + end, string.Empty) + $" {units}{UNITS[unit]}").Trim();
+        }
+
+        private static string createResultFromEntries(IEnumerable<string> values)
+        {
+            return string.Join(string.Empty, values);
+        }
+
+        private static string createEntry(int i, string v)
+        {
+            return v;
         }
 
         public override string ToString()
         {
-            return $"{Life:0.0} {UNITS[Unit]}".Trim().Replace(".0", string.Empty);
+            return text ?? "???";
+        }
+
+        public string ToString(int floatsOverride)
+        {
+            text = makeText(Life, Multiplier, Index, floatsOverride);
+            return text;
         }
     }
 }

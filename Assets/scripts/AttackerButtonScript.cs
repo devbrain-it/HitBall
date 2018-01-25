@@ -33,7 +33,7 @@ namespace Assets.scripts
         private HashSet<PowerUp> powerUpEffect;
         private GameObject       ballsSpawnParent;
         private Button           button;
-        private bool active;
+        private bool             active;
 
         void Start()
         {
@@ -66,28 +66,46 @@ namespace Assets.scripts
                 }
             }
 
-            UpdateFullUpgrade();
+            PermanentEffect_FullUpgrade();
+        }
 
-            if (IsPowerUpMaximum && IsTimeDelayed)
+        private void PermanentEffect_FullUpgrade()
+        {
+            var isActive = UpdateIsFullUpgrade();
+            if (isActive && IsTimeDelayedForButton)
             {
                 lastTime = Time.time;
                 OnClick();
             }
         }
 
-        private void UpdateFullUpgrade()
+        private bool UpdateIsFullUpgrade()
         {
             // wenn geklickt wird und es aktiv ist, wird es hinzugefügt
             // wenn das Geld alle ist, wird es entfernt, siehe "Upgrade()"
 
             // klick aktiviert es, wenn es eingeschaltet ist, solange Geld da ist
-            if (MouseHelper.IsMouseLeftDown && GameScript.Game.IsFullUpgradeActive && active)
+            var gameIsFullUpgradeActive = GameScript.Game.IsFullUpgradeActive;
+            if (MouseHelper.IsMouseLeftDown && gameIsFullUpgradeActive && active)
             {
                 PowerUps.Add(PowerUp.MAXIMUM);
             }
+            else if (!gameIsFullUpgradeActive)
+            {
+                PowerUps.Remove(PowerUp.MAXIMUM);
+            }
+
+            return PowerUps.Contains(PowerUp.MAXIMUM);
         }
 
-        private bool IsTimeDelayed => Time.time - lastTime >= MouseHelper.DEFAULT_CLICK_REPEAT_DURATION_SECONDS;
+        private bool IsTimeDelayedForButton
+        {
+            get
+            {
+                var runtime = Time.time - lastTime;
+                return runtime >= PlayerScript.CalculateClickInterval;
+            }
+        }
 
         private HashSet<PowerUp> PowerUps
         {
@@ -171,7 +189,7 @@ namespace Assets.scripts
         {
             active = true;
         }
-        
+
         void OnMouseExit()
         {
             active = false;

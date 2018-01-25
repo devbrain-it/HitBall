@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,6 +11,7 @@ namespace Assets.scripts
 
         [Header("UI")]public     Text   MoneyText;
         public                   Text   LevelText;
+        public                   Text   ClickTime;
         public                   Text   RemainingMoneyText;
         public                   Slider RemainingMoneySlider;
         [Header("Player")]public int    Level = 1;
@@ -19,6 +21,7 @@ namespace Assets.scripts
         private string               moneyFormat;
         private string               levelFormat;
         private string               remainingMoneyFormat;
+        private string               clickTimeFormat;
         private AttackerButtonScript attackerTouch;
 
         public static PlayerScript Player
@@ -37,10 +40,11 @@ namespace Assets.scripts
 
         void Start()
         {
-            Money                = Hit.FromFullLife(InitMoney);
+            Money                = Hit.FromFullLife(InitMoney, 4);
             moneyFormat          = MoneyText.text;
             levelFormat          = LevelText.text;
             remainingMoneyFormat = RemainingMoneyText.text;
+            clickTimeFormat      = ClickTime.text;
             attackerTouch        = GameObject.FindGameObjectsWithTag(AttackerButtonScript.TAG).Select(bo => bo.GetComponent<AttackerButtonScript>()).FirstOrDefault(script => script.Titel.Equals("Touch"));
             UpdateTexts();
         }
@@ -52,11 +56,12 @@ namespace Assets.scripts
 
         private void UpdateTexts()
         {
-            MoneyText.text             = string.Format(moneyFormat, Money);
+            MoneyText.text             = string.Format(moneyFormat, Money.ToString(4));
             var money                  = GetRemainingMoney();
-            RemainingMoneyText.text    = string.Format(remainingMoneyFormat, money);
+            RemainingMoneyText.text    = string.Format(remainingMoneyFormat, money.ToString(4));
             RemainingMoneySlider.value = GetRemainingMoneyPercentage(money);
-            LevelText.text             = string.Format(levelFormat, Level);
+            LevelText.text             = string.Format(levelFormat,     Level);
+            ClickTime.text             = string.Format(clickTimeFormat, TimeSpan.FromSeconds(CalculateClickInterval).ToString(@"ss\.fff"));
         }
 
         private static Hit GetRemainingMoney()
@@ -81,7 +86,9 @@ namespace Assets.scripts
 
         public void AddMoney(double money)
         {
-            Money += Hit.FromFullLife(money);
+            Money += Hit.FromFullLife(money, 4);
         }
+
+        public static float CalculateClickInterval => MouseHelper.DEFAULT_CLICK_REPEAT_DURATION_SECONDS / PlayerScript.Player.Level;
     }
 }

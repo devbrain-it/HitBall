@@ -8,7 +8,7 @@ namespace Assets.scripts.clip
 {
     public class AnimationGroup : IPlayableClip, IEnumerable<IPlayableClip>
     {
-        public event Action TimeUpEvent;
+        public event Action<AnimationGroup> TimeUpEvent;
 
         private          IPlayableClip[] clips;
         private readonly MonoBehaviour   owner;
@@ -105,7 +105,7 @@ namespace Assets.scripts.clip
 
             Enabled       = false;
 
-            TimeUpEvent?.Invoke();
+            TimeUpEvent?.Invoke(this);
         }
 
         IEnumerator IEnumerable.GetEnumerator()

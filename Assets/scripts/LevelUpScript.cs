@@ -38,7 +38,7 @@ namespace Assets.scripts
             }
         }
 
-        private void onAnimationsEnd()
+        private void onAnimationsEnd(AnimationGroup sender)
         {
             doneCallback?.Invoke();
         }

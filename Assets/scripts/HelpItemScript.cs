@@ -9,10 +9,10 @@ namespace Assets.scripts
 {
     public class HelpItemScript : MonoBehaviour
     {
-        public ExplosionScript ExplosionScript;
-        public Text            CountdownText;
-        public double          ExplosionForce;
-        public float           CountdownSeconds = 5f;
+        public ExplosionDestroyScript ExplosionScript;
+        public Text                   CountdownText;
+        public double                 ExplosionForce;
+        public float                  CountdownSeconds = 5f;
 
         private float runtime;
         private bool  exploded;
@@ -26,7 +26,6 @@ namespace Assets.scripts
         {
             if (!exploded)
             {
-
                 if (GameScript.Game.InLevelUp)
                 {
                     exploded = true;
@@ -37,15 +36,21 @@ namespace Assets.scripts
                 runtime += Time.deltaTime;
                 UpdateCountdownText();
 
-                if (runtime > CountdownSeconds)
+                if (runtime > CountdownSeconds && !exploded)
                 {
                     exploded = true;
                     var r    = GetComponent<CircleCollider2D>().radius;
-                    ExplosionScript.ExplodeAsTrigger(r, ExplosionForce);
+
+                    ExplosionScript.Explode(null, new ExplosionDestroyScript.ExplosionData
+                                                  {
+                                                      Force      = ExplosionForce,
+                                                      InitRadius = r
+                                                  });
 
                     var rb          = GetRigidbody(gameObject);
                     rb.gravityScale = 0;
                     rb.velocity     = Vector2.zero;
+                    Destroy(gameObject);
                 }
             }
         }

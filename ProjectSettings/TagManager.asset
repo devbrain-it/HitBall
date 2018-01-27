@@ -10,6 +10,7 @@ TagManager:
   - Attacker
   - ExplosionBurst
   - PowerUp
+  - Cutter-FX
   layers:
   - Default
   - TransparentFX

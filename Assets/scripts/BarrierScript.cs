@@ -5,11 +5,22 @@ using UnityEngine;
 
 namespace Assets.scripts
 {
-    [RequireComponent(typeof(ExplosionScript))]
-    [RequireComponent(typeof(Rigidbody2D))]
+    [RequireComponent(typeof(ExplosionDestroyScript), typeof(Rigidbody2D))]
     public class BarrierScript : MonoBehaviour
     {
         public const string TAG = "Barrier";
+
+        public TextMeshPro            LifepointsText;
+        public PlayAnimation          PlayAnim;
+        public ColorizeScript         ColorizerLife;
+        public double                 life;
+        public double                 FullLife;
+        public float                  ClickRepeatDurationSeconds = MouseHelper.DEFAULT_CLICK_REPEAT_DURATION_SECONDS;
+        public GameObject             ExplosionParent;
+        public ExplosionDestroyScript Explosion;
+
+        private DelayClick mouseLeftDelay;
+        private bool       destroyed;
 
         public double Life
         {
@@ -21,17 +32,6 @@ namespace Assets.scripts
             }
         }
 
-        public TextMeshPro    LifepointsText;
-        public PlayAnimation  PlayAnim;
-        public ColorizeScript ColorizerLife;
-        public double         life;
-        public double         FullLife;
-        public float          ClickRepeatDurationSeconds = MouseHelper.DEFAULT_CLICK_REPEAT_DURATION_SECONDS;
-
-        private DelayClick      mouseLeftDelay;
-        private ExplosionScript explosion;
-        private bool            destroyed;
-
         void Start()
         {
             mouseLeftDelay = new DelayClick
@@ -42,8 +42,6 @@ namespace Assets.scripts
                              };
             UpdateText();
             UpdateLifeColorProgress();
-            explosion = GetComponent<ExplosionScript>();
-            explosion.Init();
         }
 
         void Update()
@@ -61,8 +59,7 @@ namespace Assets.scripts
 
         protected virtual void OnMouseLeftDown()
         {
-            var    b      = GameObject.FindGameObjectsWithTag("Respawn");
-            Action attack = () => DoDemage(PlayerScript.Player.GetClickHitForce());
+            var b = GameObject.FindGameObjectsWithTag("Respawn");
             if (b != null)
             {
                 MouseHelper.PerformOnValidTargetObject(gameObject, attack, b);
@@ -73,10 +70,12 @@ namespace Assets.scripts
             }
         }
 
+        private void attack() => DoDemage(PlayerScript.Player.GetClickHitForce());
+
         void OnCollisionEnter2D(Collision2D coll)
         {
             var hitComponent = coll.gameObject.GetComponent<IHit>();
-            if (hitComponent != null)
+            if (hitComponent != null && !destroyed)
             {
                 DoDemage(hitComponent.GetHitForce());
             }
@@ -114,7 +113,6 @@ namespace Assets.scripts
                 //GetComponent<CircleCollider2D>().enabled = false;
 
                 Explode(remainingPower);
-                destroyed = true;
             }
 
             PlayerScript.Player.AddMoney(remainingPower);
@@ -124,13 +122,25 @@ namespace Assets.scripts
 
         private void Explode(double remainingPower)
         {
-            LifepointsText.enabled = false;
+            if (!destroyed)
+            {
+                destroyed = true;
 
-            // collider wird zum Trigger beim Aufruf von ExplodeAsTrigger
-            var minRadius = GetComponent<CircleCollider2D>().radius;
+                LifepointsText.enabled = false;
 
-            // endgültig! -> Dieses gameObject wird endgültig zerstört durch diesen Aufruf
-            explosion.ExplodeAsTrigger(minRadius, remainingPower);
+                // collider wird zum Trigger beim Aufruf von ExplodeAsTrigger
+                var minRadius = GetComponent<CircleCollider2D>().radius;
+
+                // endgültig! -> Dieses gameObject wird endgültig zerstört durch diesen Aufruf
+                var data = new ExplosionDestroyScript.ExplosionData
+                           {
+                               Force      = remainingPower,
+                               InitRadius = minRadius
+                           };
+                Explosion.Explode(ExplosionParent, data, transform.position);
+
+                Destroy(this.gameObject);
+            }
         }
 
         private void UpdateLifeColorProgress()

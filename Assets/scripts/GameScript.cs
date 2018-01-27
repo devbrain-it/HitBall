@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Experimental.XR;
 using UnityEngine.UI;
-using Random = UnityEngine.Random;
 
 namespace Assets.scripts
 {
@@ -17,7 +14,9 @@ namespace Assets.scripts
         [Header("Barriers"), Range(1, 100)]public int            BarriersToSpawn = 20;
         [Range(                    1, 100)]public double         BarrierLife     = 7;
         public                                    AnimationCurve BarrierLifeMultiplicator;
-        [HideInInspector]              public     bool           CanSpawnBarriers = true;
+        [HideInInspector]public                   bool           CanSpawnBarriers = true;
+        public                                    Transform      SpawnParent;
+        public                                    GameObject     ExplosionParent;
         [Header("Store Power Actions")]public     Toggle         FullUpgradeToggle;
 
         public static GameScript Game { get; private set; }
@@ -117,9 +116,14 @@ namespace Assets.scripts
 
         private void InitBarrier(GameObject b)
         {
-            SpawnHelper.SetParentInHierarchy(b, GameObject.Find("barriersSpawn"));
-            var barrier  = b.GetComponent<BarrierScript>();
-            barrier.Life = BarrierLife;
+            if (SpawnParent != null)
+            {
+                SpawnHelper.SetParentInHierarchy(b, SpawnParent.gameObject);
+            }
+
+            var barrier             = b.GetComponent<BarrierScript>();
+            barrier.ExplosionParent = ExplosionParent;
+            barrier.Life            = BarrierLife;
         }
 
         public void Hit(bool destroyed)

@@ -36,6 +36,9 @@ namespace Assets.scripts.clip
         {
             animation.enabled = true;
             playtime          = 0f;
+            #if UNITY_EDITOR
+            Debug.Log($"AnimationClip.Play() Name: '{Name}' Layer: {Layer}");
+            #endif
             animation.Play(Name, Layer);
         }
 

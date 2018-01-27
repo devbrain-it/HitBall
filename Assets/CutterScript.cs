@@ -42,6 +42,11 @@ namespace Assets
 
         public bool Active { get; private set; }
 
+        public void SetStartPosition(Vector3 startPosition)
+        {
+            this.startPosition = startPosition;
+        }
+
         void Start()
         {
             startPosition             =  transform.localPosition;
@@ -50,7 +55,9 @@ namespace Assets
             Laser.TriggeredExitEvent  += OnLaserCollider2DExit;
             Laser.TriggeredStayEvent  += OnLaserCollider2DStay;
             EndTrigger.TriggeredEvent += OnEndCollider2DTriggered;
-            ActivateLaser();
+            
+            // demo
+            // ActivateLaser();
         }
 
         void Update()

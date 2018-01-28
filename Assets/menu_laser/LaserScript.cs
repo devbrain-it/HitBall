@@ -39,6 +39,7 @@ namespace Assets.menu_laser
         public                   float               Friction = 0.01f;
         private                  Vector3             startPosition;
         private                  HashSet<BarrierHit> barrierHits;
+        private                  float               flickerTime;
 
         public bool Active { get; private set; }
 
@@ -56,6 +57,8 @@ namespace Assets.menu_laser
             Laser.TriggeredStayEvent  += OnLaserCollider2DStay;
             EndTrigger.TriggeredEvent += OnEndCollider2DTriggered;
 
+            UpdateFlickering();
+
             // demo
             // ActivateLaser();
         }
@@ -64,12 +67,45 @@ namespace Assets.menu_laser
         {
             if (Active)
             {
+                UpdateFlickering();
+
                 MoveBySpeed();
             }
             else
             {
                 // keep at start
                 transform.localPosition = startPosition;
+            }
+        }
+
+        private void UpdateFlickering()
+        {
+            flickerTime += Time.deltaTime;
+            if (flickerTime >= Random.Range(RandomIntervalMin, RandomIntervalMax))
+            {
+                flickerTime   = 0;
+                var positions = new Vector3[2 + RandomElements];
+                var fromPos   = LaserBody.GetPosition(0);
+                positions[0]  = fromPos;
+
+                var lastIndex        = positions.Length                              - 1;
+                var toPos            = LaserBody.GetPosition(LaserBody.positionCount - 1);
+                positions[lastIndex] = toPos;
+
+                var length = toPos - fromPos;
+                var x      = length.x / positions.Length;
+                var max    = Mathf.Max(RandomIntervalMin, RandomIntervalMax);
+                for (var i = 1; i < lastIndex; i++)
+                {
+                    var pos   = new Vector3(fromPos.x + x * i, fromPos.y, fromPos.z);
+                    var value = Random.Range(RandomIntervalMin, RandomIntervalMax)
+                              - Random.Range(RandomIntervalMin, RandomIntervalMax);
+                    pos.y        += Mathf.Clamp(value, -max, max);
+                    positions[i] =  pos;
+                }
+
+                LaserBody.positionCount = positions.Length;
+                LaserBody.SetPositions(positions);
             }
         }
 

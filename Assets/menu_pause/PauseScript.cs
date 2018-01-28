@@ -1,20 +1,20 @@
-﻿using UnityEngine;
-using AnimationClip = Assets.scripts.clip.AnimationClip;
+﻿using System.Collections;
+using UnityEngine;
 
-namespace Assets.Prefabs.menu.Pause
+namespace Assets.menu_pause
 {
     public class PauseScript : MonoBehaviour
     {
-        public static bool IsPaused;
+        private static bool GameIsPaused;
 
-        public Canvas   PauseMenuCanvas;
-        public Animator FadeOutAnimator;
-        public string   FadeOutAnimationTriggerName;
+        public GameObject PauseMenu;
+        public Animator   PauseAnimator;
+        public string     FadeOutTriggerName = "FadeOut";
 
         void Start()
         {
-            ResumeGame();
-            FadeOutAnimator.enabled = false;
+            PauseMenu.SetActive(false);
+            GameIsPaused = false;
         }
 
         // Update is called once per frame
@@ -22,46 +22,73 @@ namespace Assets.Prefabs.menu.Pause
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                if (IsPaused)
-                {
-                    ResumeGame();
-                }
-                else
-                {
-                    PauseGame();
-                }
+                TogglePause();
             }
+        }
 
-            if (!IsPaused)
+        void TogglePause()
+        {
+            if (GameIsPaused)
             {
-                if (!new AnimationClip(FadeOutAnimator, FadeOutAnimationTriggerName).IsPlaying)
-                {
-                    PauseMenuCanvas.gameObject.SetActive(false);
-                    FadeOutAnimator.enabled = false;
-                }
+                ResumeGame();
+            }
+            else
+            {
+                PauseGame();
             }
         }
 
         public void PauseGame()
         {
-            IsPaused                = true;
-            Time.timeScale          = 0;
-            FadeOutAnimator.enabled = true;
-            PauseMenuCanvas.gameObject.SetActive(true);
+            if (!GameIsPaused)
+            {
+                const string pauseMethod = nameof(ShowPaused);
+                StopCoroutine(pauseMethod);
+                StartCoroutine(pauseMethod);
+            }
+        }
+
+        IEnumerator ShowPaused()
+        {
+            PauseMenu.SetActive(true);
+            PauseAnimator.SetBool(FadeOutTriggerName, false);
+
+            yield return new WaitForSeconds(0.15f);
+
+            GameIsPaused   = true;
+            Time.timeScale = 0;
+        }
+
+        private bool inAnimation(int layer)
+        {
+            return PauseAnimator.IsInTransition(layer) || PauseAnimator.GetCurrentAnimatorStateInfo(layer).normalizedTime < 1;
         }
 
         public void ResumeGame()
         {
-            IsPaused       = false;
+            if (GameIsPaused)
+            {
+                const string hideMethod = nameof(HidePause);
+                StopCoroutine(hideMethod);
+                StartCoroutine(hideMethod);
+            }
+        }
+
+        IEnumerator HidePause()
+        {
+            PauseAnimator.SetBool(FadeOutTriggerName, true);
+
+            while (inAnimation(0))
+            {
+                yield return null;
+            }
+            
+            PauseAnimator.SetBool(FadeOutTriggerName, false);
+            
+            PauseMenu.SetActive(false);
             Time.timeScale = 1;
-            if (FadeOutAnimator == null || FadeOutAnimationTriggerName == null)
-            {
-                PauseMenuCanvas.gameObject.SetActive(false);
-            }
-            else
-            {
-                FadeOutAnimator.SetTrigger(FadeOutAnimationTriggerName);
-            }
+            GameIsPaused   = false;
+            yield return null;
         }
 
         public void QuitGame()

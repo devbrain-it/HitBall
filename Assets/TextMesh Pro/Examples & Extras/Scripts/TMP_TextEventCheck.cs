@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 
-
-namespace TMPro.Examples
+namespace Assets.TextMesh_Pro.Scripts
 {
     public class TMP_TextEventCheck : MonoBehaviour
     {

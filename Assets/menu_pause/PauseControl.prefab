@@ -216,8 +216,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PauseMenuCanvas: {fileID: 223626320125278626}
   FadeOutAnimator: {fileID: 95961195936731972}
-  FadeOutAnimation: PauseFadeOutAnim
-  FadeOutAnimationLayer: 2
+  FadeOutAnimationTriggerName: 
 --- !u!114 &114103464843560624
 MonoBehaviour:
   m_ObjectHideFlags: 1

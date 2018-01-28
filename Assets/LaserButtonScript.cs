@@ -30,7 +30,6 @@ namespace Assets
             else
             {
                 CautionPanel.Show();
-                CautionPanel.HideAfterAnimation();
                 Laser.ActivateLaser();
             }
 

@@ -1,84 +1,141 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace Assets.scripts
 {
     public class CautionScript : MonoBehaviour
     {
-        public Animator Animator;
-        public string   TriggerFadeIn;
-        public string   TriggerFadeOut;
+        public Animator   Animator;
+        public GameObject Panel;
+        public string     ExitParameter = "exit";
 
-        private float duration = 1;
-
-        private FadingStory nextTrigger = FadingStory.HIDDEN;
-        private float       runtime;
-
-        public bool IsVisible
-        {
-            get { return nextTrigger == FadingStory.FADE_IN || nextTrigger != FadingStory.VISIBLE; }
-        }
+        private bool awaiting;
 
         void Start()
         {
-            TriggerHide();
+            MarkHidden();
         }
 
-        void Update()
+        private void MarkHidden()
         {
-            switch (nextTrigger)
-            {
-                case FadingStory.FADE_IN:
-                    TriggerShow();
-                    break;
-                case FadingStory.VISIBLE:
-                    runtime += Time.deltaTime;
-                    if (runtime >= duration)
-                    {
-                        TriggerHide();
-                    }
+            Panel.SetActive(false);
+            IsVisible = false;
+        }
 
-                    break;
-                case FadingStory.HIDDEN:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
+        public bool IsVisible { get; private set; }
+
+        public void Show()
+        {
+            if (ShowingAllowed)
+            {
+                const string showMethod = nameof(TriggerShow);
+                StopCoroutine(showMethod);
+                StartCoroutine(showMethod);
+            }
+            else
+            {
+                const string waitMethod = nameof(AWaitForShow);
+                StopCoroutine(waitMethod);
+                StartCoroutine(waitMethod, new Action(Show));
             }
         }
 
-        private void TriggerShow()
+        public void HideAfterAnimation()
         {
-            Animator.SetTrigger(TriggerFadeIn);
-            Animator.ResetTrigger(TriggerFadeOut);
-            nextTrigger = FadingStory.VISIBLE;
-            runtime     = 0;
+            const string hideAfterShowMethod = nameof(HideAfterShow);
+            StopCoroutine(hideAfterShowMethod);
+            StartCoroutine(hideAfterShowMethod);
         }
 
-        public void TriggerShow(TimeSpan span)
+        IEnumerator HideAfterShow()
         {
-            if (!IsVisible)
+            yield return new WaitUntil(() => IsVisible && awaiting);
+
+            Hide();
+        }
+
+        public bool ShowingAllowed
+        {
+            get { return !IsVisible && !awaiting; }
+        }
+
+        IEnumerator AWaitForShow(object callback)
+        {
+            yield return new WaitUntil(() => ShowingAllowed);
+
+            var act = callback as Action;
+            act?.Invoke();
+        }
+
+        IEnumerator TriggerShow()
+        {
+            awaiting      = true;
+            ExitParameter = "exit";
+            Animator.SetBool(ExitParameter, false);
+            Panel.SetActive(true);
+
+            yield return new WaitUntil(() => !Animator.GetBool(ExitParameter));
+
+            while (inAnimation(0))
             {
-                nextTrigger = FadingStory.FADE_IN;
-                duration    = (float) span.TotalSeconds;
+                yield return null;
+            }
+
+            IsVisible = true;
+            awaiting  = false;
+        }
+
+        private bool inAnimation(int layerIndex)
+        {
+            return Animator.IsInTransition(layerIndex) || Animator.GetCurrentAnimatorStateInfo(layerIndex).normalizedTime < 1;
+        }
+
+        public void Hide()
+        {
+            if (HideAllowed)
+            {
+                const string hideMethod = nameof(TriggerHide);
+                StopCoroutine(hideMethod);
+                StartCoroutine(hideMethod);
+            }
+            else
+            {
+                const string waitMethod = nameof(AWaitForHide);
+                StopCoroutine(waitMethod);
+                StartCoroutine(waitMethod);
             }
         }
 
-        public void TriggerHide()
+        public bool HideAllowed
         {
-            if (IsVisible)
-            {
-                Animator.SetTrigger(TriggerFadeOut);
-                Animator.ResetTrigger(TriggerFadeIn);
-                nextTrigger = FadingStory.HIDDEN;
-            }
+            get { return IsVisible && !awaiting; }
         }
-    }
 
-    public enum FadingStory
-    {
-        HIDDEN,
-        FADE_IN,
-        VISIBLE
+        IEnumerator AWaitForHide()
+        {
+            yield return new WaitUntil(() => HideAllowed);
+        }
+
+        IEnumerator TriggerHide()
+        {
+            awaiting = true;
+            Animator.SetBool(ExitParameter, true);
+
+            yield return new WaitUntil(() => Animator.GetBool(ExitParameter));
+
+            while (inAnimation(0))
+            {
+                yield return null;
+            }
+
+            Animator.SetBool(ExitParameter, false);
+            yield return new WaitUntil(() => !Animator.GetBool(ExitParameter));
+
+            MarkHidden();
+
+            awaiting = false;
+        }
     }
 }

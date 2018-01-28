@@ -25,10 +25,12 @@ namespace Assets
             if (LaserIsActive)
             {
                 Laser.StopLaser();
+                CautionPanel.Hide();
             }
             else
             {
-                CautionPanel.TriggerShow(TimeSpan.FromSeconds(CautionDurationSec));
+                CautionPanel.Show();
+                CautionPanel.HideAfterAnimation();
                 Laser.ActivateLaser();
             }
 

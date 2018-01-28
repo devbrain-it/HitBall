@@ -56,7 +56,6 @@ GameObject:
   - component: {fileID: 224966799742494756}
   - component: {fileID: 223942608294650638}
   - component: {fileID: 114948271651445776}
-  - component: {fileID: 225771607629698596}
   m_Layer: 0
   m_Name: CautionCanvas
   m_TagString: Untagged
@@ -75,13 +74,14 @@ GameObject:
   - component: {fileID: 222870043084649564}
   - component: {fileID: 114529891292580972}
   - component: {fileID: 225245402055057580}
+  - component: {fileID: 95275594643352428}
   m_Layer: 0
   m_Name: CautionPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1716697783949848
 GameObject:
   m_ObjectHideFlags: 0
@@ -91,7 +91,6 @@ GameObject:
   m_Component:
   - component: {fileID: 224534694472239320}
   - component: {fileID: 114561042803658708}
-  - component: {fileID: 95287876103048562}
   m_Layer: 0
   m_Name: CautionControl
   m_TagString: Untagged
@@ -99,13 +98,13 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!95 &95287876103048562
+--- !u!95 &95275594643352428
 Animator:
   serializedVersion: 3
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1716697783949848}
+  m_GameObject: {fileID: 1661069860528548}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 38010a3ec550d2b479c11630b3dbbebc, type: 2}
@@ -155,9 +154,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb67d2cf48e24db45af13c42503469a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Animator: {fileID: 95287876103048562}
-  TriggerFadeIn: FadeIn
-  TriggerFadeOut: FadeOut
+  Animator: {fileID: 95275594643352428}
+  Panel: {fileID: 1661069860528548}
+  ExitParameter: exit
 --- !u!114 &114598228389118782
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -283,8 +282,8 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: 842017295
+  m_SortingOrder: 1
   m_TargetDisplay: 0
 --- !u!224 &224138544992235558
 RectTransform:
@@ -330,7 +329,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1661069860528548}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 32}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 224747070483936078}
@@ -386,17 +385,6 @@ CanvasGroup:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1661069860528548}
-  m_Enabled: 1
-  m_Alpha: 0
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
-  m_IgnoreParentGroups: 0
---- !u!225 &225771607629698596
-CanvasGroup:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1458068202758418}
   m_Enabled: 1
   m_Alpha: 1
   m_Interactable: 0

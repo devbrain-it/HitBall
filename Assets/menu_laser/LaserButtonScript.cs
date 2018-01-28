@@ -1,12 +1,11 @@
-﻿using System;
-using Assets.scripts;
+﻿using Assets.scripts;
 using UnityEngine;
 
-namespace Assets
+namespace Assets.menu_laser
 {
     public class LaserButtonScript : MonoBehaviour
     {
-        public CutterScript  Laser;
+        public LaserScript   Laser;
         public CautionScript CautionPanel;
         public float         CautionDurationSec = 5;
 

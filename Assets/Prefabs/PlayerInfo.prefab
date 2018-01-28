@@ -418,8 +418,8 @@ GameObject:
   - component: {fileID: 224820102395632308}
   - component: {fileID: 222541895243957098}
   - component: {fileID: 114304573916693394}
-  - component: {fileID: 114468285755163088}
   - component: {fileID: 114607517674511644}
+  - component: {fileID: 114468285755163088}
   m_Layer: 0
   m_Name: LaserButton
   m_TagString: Untagged

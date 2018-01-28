@@ -3,7 +3,7 @@ using System.Linq;
 using Assets.scripts;
 using UnityEngine;
 
-namespace Assets
+namespace Assets.menu_laser
 {
     // TODO ANIMATE Random Points in LineRenderer
     // TODO Design Laser Image
@@ -22,7 +22,7 @@ namespace Assets
     // TODO Barriers cannot explode with burst, when destroyed by laser (its a cut, no heating)
     // TODO Show Warning before laser activity with alert (dramatic illusion)
 
-    public class CutterScript : MonoBehaviour
+    public class LaserScript : MonoBehaviour
     {
         [Header("UI")]public LineRenderer  LaserBody;
         public               TriggerScript Laser;
@@ -42,9 +42,9 @@ namespace Assets
 
         public bool Active { get; private set; }
 
-        public void SetStartPosition(Vector3 startPosition)
+        public void SetStartPosition(Vector3 pos)
         {
-            this.startPosition = startPosition;
+            startPosition = pos;
         }
 
         void Start()
@@ -55,7 +55,7 @@ namespace Assets
             Laser.TriggeredExitEvent  += OnLaserCollider2DExit;
             Laser.TriggeredStayEvent  += OnLaserCollider2DStay;
             EndTrigger.TriggeredEvent += OnEndCollider2DTriggered;
-            
+
             // demo
             // ActivateLaser();
         }

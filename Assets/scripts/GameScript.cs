@@ -143,7 +143,7 @@ namespace Assets.scripts
         {
             InLevelUp  = true;
             var player = PlayerScript.Player;
-            player.Level++;
+            player.LevelUpPlayer();
             var f                                        = Mathf.Min(1, player.Level / 100f);
             BarrierLife                                  += BarrierLife              * (1 + BarrierLifeMultiplicator.Evaluate(f));
             LevelUpAnimation.Play(() => CanSpawnBarriers =  true);

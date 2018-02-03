@@ -8,7 +8,8 @@ namespace Assets.scripts
     [RequireComponent(typeof(ExplosionDestroyScript), typeof(Rigidbody2D))]
     public class BarrierScript : MonoBehaviour
     {
-        public const string TAG = "Barrier";
+        public const string TAG   = "Barrier";
+        public const string LAYER = "Entity";
 
         public TextMeshPro            LifepointsText;
         public PlayAnimation          PlayAnim;

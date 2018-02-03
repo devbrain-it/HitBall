@@ -2,6 +2,7 @@
 using System.Linq;
 using Assets.scripts;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Assets.menu_laser
 {
@@ -24,9 +25,12 @@ namespace Assets.menu_laser
 
     public class LaserScript : MonoBehaviour
     {
-        [Header("UI")]public LineRenderer  LaserBody;
-        public               TriggerScript Laser;
-        public               TriggerScript EndTrigger;
+        [Header("UI")]public LineRenderer   LaserLeft;
+        public               LineRenderer   LaserRight;
+        public               TriggerScript  Laser;
+        public               TriggerScript  EndTrigger;
+        public               ParticleSystem BurningParticlesLeft;
+        public               ParticleSystem BurningParticlesRight;
 
         [Range(0,     5)]    public float LineWidthMin;
         [Range(0,     5)]    public float LineWidthMax;
@@ -40,6 +44,8 @@ namespace Assets.menu_laser
         private                  Vector3             startPosition;
         private                  HashSet<BarrierHit> barrierHits;
         private                  float               flickerTime;
+        private                  Collider2D          laserRightHit;
+        private                  Collider2D          laserLeftHit;
 
         public bool Active { get; private set; }
 
@@ -78,35 +84,98 @@ namespace Assets.menu_laser
             }
         }
 
+        private static void DrawRayLine(Vector3 globalPos, Vector3 dir, Color color, int yOffset = 0)
+        {
+            Debug.DrawRay(globalPos + new Vector3(0, yOffset), dir, color, 0.1f);
+        }
+
         private void UpdateFlickering()
         {
             flickerTime += Time.deltaTime;
-            if (flickerTime >= Random.Range(RandomIntervalMin, RandomIntervalMax))
+            //if (flickerTime >= Random.Range(RandomIntervalMin, RandomIntervalMax))
             {
-                flickerTime   = 0;
-                var positions = new Vector3[2 + RandomElements];
-                var fromPos   = LaserBody.GetPosition(0);
-                positions[0]  = fromPos;
+                flickerTime = 0;
 
-                var lastIndex        = positions.Length                              - 1;
-                var toPos            = LaserBody.GetPosition(LaserBody.positionCount - 1);
-                positions[lastIndex] = toPos;
+                // linke Seite
+                var left = DrawLaserLeft();
 
-                var length = toPos - fromPos;
-                var x      = length.x / positions.Length;
-                var max    = Mathf.Max(RandomIntervalMin, RandomIntervalMax);
-                for (var i = 1; i < lastIndex; i++)
+                // rechte Seite
+                var right = DrawLaserRight();
+
+                // links
+                if (laserLeftHit != null)
                 {
-                    var pos   = new Vector3(fromPos.x + x * i, fromPos.y, fromPos.z);
-                    var value = Random.Range(RandomIntervalMin, RandomIntervalMax)
-                              - Random.Range(RandomIntervalMin, RandomIntervalMax);
-                    pos.y        += Mathf.Clamp(value, -max, max);
-                    positions[i] =  pos;
+                    if (!BurningParticlesLeft.IsAlive(true))
+                    {
+                        BurningParticlesLeft.gameObject.SetActive(true);
+                        BurningParticlesLeft.Restart();
+                    }
+
+                    BurningParticlesLeft.transform.localPosition = left;
+                }
+                else if (BurningParticlesLeft.IsAlive(true))
+                {
+                    BurningParticlesLeft.gameObject.SetActive(false);
                 }
 
-                LaserBody.positionCount = positions.Length;
-                LaserBody.SetPositions(positions);
+                // rechts
+                if (laserRightHit != null)
+                {
+                    if (!BurningParticlesRight.IsAlive(true))
+                    {
+                        BurningParticlesRight.gameObject.SetActive(true);
+                        BurningParticlesRight.Restart();
+                    }
+
+                    BurningParticlesRight.transform.localPosition = right;
+                }
+                else if (BurningParticlesRight.IsAlive(true))
+                {
+                    BurningParticlesRight.gameObject.SetActive(false);
+                }
             }
+        }
+
+        private Vector3 DrawLaserRight()
+        {
+            var localRightStart = Vector3.zero;
+            var localRightEnd   = LaserLeft.transform.localPosition - LaserRight.transform.localPosition;
+            laserRightHit       = null;
+            foreach (var hit in Physics2D.LinecastAll(LaserRight.transform.position, LaserLeft.transform.position).Where(col => col.collider != null && col.collider.gameObject.tag == BarrierScript.TAG).ToList())
+            {
+                localRightEnd = localRightStart + Vector3.left * Vector3.Distance(hit.point, LaserRight.transform.position);
+                laserRightHit = hit.collider;
+                break;
+            }
+
+            LaserRight.SetPositions(new[]
+                                    {
+                                        localRightStart,
+                                        localRightEnd
+                                    });
+            LaserRight.positionCount = 2;
+            return localRightEnd;
+        }
+
+        private Vector3 DrawLaserLeft()
+        {
+            var localLeftStart = Vector3.zero;
+            var localLeftEnd   = LaserRight.transform.localPosition - LaserLeft.transform.localPosition;
+            laserLeftHit       = null;
+            foreach (var hit in Physics2D.LinecastAll(LaserLeft.transform.position, LaserRight.transform.position).Where(col => col.collider != null && col.collider.gameObject.tag == BarrierScript.TAG).ToList())
+            {
+                localLeftEnd = localLeftStart + Vector3.right * Vector3.Distance(hit.point, LaserLeft.transform.position);
+                laserLeftHit = hit.collider;
+                break;
+            }
+
+            LaserLeft.SetPositions(new[]
+                                   {
+                                       localLeftStart,
+                                       localLeftEnd
+                                   });
+            LaserLeft.positionCount = 2;
+            return localLeftEnd;
         }
 
         private void OnLaserCollider2DStay(TriggerScript laser, Collider2D collidedWith)
@@ -120,8 +189,17 @@ namespace Assets.menu_laser
                     hit.Update();
                     if (hit.Runtime >= Random.Range(RandomIntervalMin, RandomIntervalMax))
                     {
-                        b.DoDemage(Hit.FromFullLife(ForcePerSecond));
-                        hit.ResetRuntime();
+                        if (laserRightHit != null && b.gameObject == laserRightHit.gameObject)
+                        {
+                            b.DoDemage(Hit.FromFullLife(ForcePerSecond));
+                            hit.ResetRuntime();
+                        }
+
+                        if (laserLeftHit != null && b.gameObject == laserLeftHit.gameObject)
+                        {
+                            b.DoDemage(Hit.FromFullLife(ForcePerSecond));
+                            hit.ResetRuntime();
+                        }
                     }
                 }
             }
@@ -184,8 +262,15 @@ namespace Assets.menu_laser
 
         private void UpdateLaserRuntimeState()
         {
-            LaserBody.gameObject.SetActive(Active);
+            LaserLeft.gameObject.SetActive(Active);
+            LaserRight.gameObject.SetActive(Active);
         }
+    }
+
+    internal enum LaserSide
+    {
+        LEFT,
+        RIGHT
     }
 
     public class BarrierHit : IUpdate

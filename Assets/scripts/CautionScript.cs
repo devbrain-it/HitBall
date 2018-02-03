@@ -2,14 +2,16 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.PostProcessing;
 
 namespace Assets.scripts
 {
     public class CautionScript : MonoBehaviour
     {
-        public Animator   Animator;
-        public GameObject Panel;
-        public string     ExitParameter = "exit";
+        public Animator              Animator;
+        public GameObject            Panel;
+        public PostProcessingProfile PostProcess;
+        public string                ExitParameter = "exit";
 
         private bool awaiting;
 
@@ -20,11 +22,17 @@ namespace Assets.scripts
 
         private void MarkHidden()
         {
+            SetVignet(false);
             Panel.SetActive(false);
             IsVisible = false;
         }
 
         public bool IsVisible { get; private set; }
+
+        private void SetVignet(bool active)
+        {
+            PostProcess.vignette.enabled = active;
+        }
 
         public void Show()
         {
@@ -60,7 +68,9 @@ namespace Assets.scripts
             awaiting      = true;
             ExitParameter = "exit";
             Panel.SetActive(true);
-            
+            PostProcess.vignette.enabled = true;
+            SetVignet(true);
+
             yield return new WaitForSeconds(0.15f);
 
             IsVisible = true;

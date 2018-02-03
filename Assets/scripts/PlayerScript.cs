@@ -14,6 +14,7 @@ namespace Assets.scripts
         public                   Text   ClickTime;
         public                   Text   RemainingMoneyText;
         public                   Slider RemainingMoneySlider;
+        public                   Text   HighscoreText;
         [Header("Player")]public int    Level = 1;
         public                   double InitMoney;
         [HideInInspector]public  Hit    Money;
@@ -23,6 +24,10 @@ namespace Assets.scripts
         private string               remainingMoneyFormat;
         private string               clickTimeFormat;
         private AttackerButtonScript attackerTouch;
+        private string               highscoreFormat;
+        private TimeSpan             highscoreTime;
+        private DateTime             levelTime;
+        private int                  highscoreLevel;
 
         public static PlayerScript Player
         {
@@ -45,6 +50,10 @@ namespace Assets.scripts
             levelFormat          = LevelText.text;
             remainingMoneyFormat = RemainingMoneyText.text;
             clickTimeFormat      = ClickTime.text;
+            highscoreFormat      = HighscoreText.text;
+            highscoreTime        = TimeSpan.Zero;
+            highscoreLevel       = 1;
+            levelTime            = DateTime.Now;
             attackerTouch        = GameObject.FindGameObjectsWithTag(AttackerButtonScript.TAG).Select(bo => bo.GetComponent<AttackerButtonScript>()).FirstOrDefault(script => script.Titel.Equals("Touch"));
             UpdateTexts();
         }
@@ -60,8 +69,10 @@ namespace Assets.scripts
             var money                  = GetRemainingMoney();
             RemainingMoneyText.text    = string.Format(remainingMoneyFormat, money.ToString(4));
             RemainingMoneySlider.value = GetRemainingMoneyPercentage(money);
-            LevelText.text             = string.Format(levelFormat,     Level);
-            ClickTime.text             = string.Format(clickTimeFormat, TimeSpan.FromSeconds(CalculateClickInterval).ToString(@"ss\.fff"));
+            LevelText.text             = string.Format(levelFormat,      Level);
+            ClickTime.text             = string.Format(clickTimeFormat,  TimeSpan.FromSeconds(CalculateClickInterval).ToString(@"ss\.fff"));
+            var text                   = string.Format("{0:0.00}s (Level {1})", highscoreTime.TotalSeconds, highscoreLevel);
+            HighscoreText.text         = string.Format(highscoreFormat,  text);
         }
 
         private static Hit GetRemainingMoney()
@@ -90,5 +101,18 @@ namespace Assets.scripts
         }
 
         public static float CalculateClickInterval => MouseHelper.DEFAULT_CLICK_REPEAT_DURATION_SECONDS / PlayerScript.Player.Level;
+
+        public void LevelUpPlayer()
+        {
+            var span = DateTime.Now - levelTime;
+            if (highscoreTime == TimeSpan.Zero || span <= highscoreTime)
+            {
+                highscoreTime  = span;
+                highscoreLevel = Level;
+            }
+
+            Level++;
+            levelTime = DateTime.Now;
+        }
     }
 }

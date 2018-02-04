@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.PostProcessing;
 
 namespace Assets.scripts
@@ -11,7 +10,8 @@ namespace Assets.scripts
         public Animator              Animator;
         public GameObject            Panel;
         public PostProcessingProfile PostProcess;
-        public string                ExitParameter = "exit";
+        public string                ExitParameter    = "exit";
+        public bool                  VignetteOnActive = false;
 
         private bool awaiting;
 
@@ -69,7 +69,7 @@ namespace Assets.scripts
             ExitParameter = "exit";
             Panel.SetActive(true);
             PostProcess.vignette.enabled = true;
-            SetVignet(true);
+            SetVignet(VignetteOnActive);
 
             yield return new WaitForSeconds(0.15f);
 

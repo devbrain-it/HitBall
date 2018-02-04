@@ -47,6 +47,9 @@ namespace Assets.menu_laser
         private                  Collider2D          laserRightHit;
         private                  Collider2D          laserLeftHit;
 
+        [Header("Laser")]public Vector2 MotionTextureSpeed = new Vector2(-3f, 0);
+
+
         public bool Active { get; private set; }
 
         public void SetStartPosition(Vector3 pos)
@@ -69,6 +72,18 @@ namespace Assets.menu_laser
             // ActivateLaser();
         }
 
+        void LateUpdate()
+        {
+            MoveTexture(LaserLeft.materials[0], MotionTextureSpeed * Time.deltaTime);
+            MoveTexture(LaserRight.materials[0], MotionTextureSpeed * Time.deltaTime);
+        }
+
+        private static void MoveTexture(Material material, Vector2 speedOffset)
+        {
+            const string maintex = "_MainTex";
+            material.SetTextureOffset(maintex, material.GetTextureOffset(maintex) + speedOffset);
+        }
+
         void Update()
         {
             if (Active)
@@ -82,11 +97,6 @@ namespace Assets.menu_laser
                 // keep at start
                 transform.localPosition = startPosition;
             }
-        }
-
-        private static void DrawRayLine(Vector3 globalPos, Vector3 dir, Color color, int yOffset = 0)
-        {
-            Debug.DrawRay(globalPos + new Vector3(0, yOffset), dir, color, 0.1f);
         }
 
         private void UpdateFlickering()
